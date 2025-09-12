@@ -103,20 +103,26 @@ export default function ChatPage() {
       communities[communityId] = { name: name, avatar: `https://picsum.photos/seed/${communityId}/100/100`, interests: 'General interests', channels: ['general'], backgroundUrl: `https://picsum.photos/seed/${communityId}-bg/1200/800` };
   }
   
-  const [allMessages, setAllMessages] = useState(() => {
-    // Deep copy to prevent mutation of the original mock data
-    if (typeof window !== 'undefined') {
-        const storedMessages = localStorage.getItem('chatMessages');
-        if (storedMessages) {
-            return JSON.parse(storedMessages);
-        }
-    }
-    return JSON.parse(JSON.stringify(initialMessages));
-  });
+  const [allMessages, setAllMessages] = useState(() => JSON.parse(JSON.stringify(initialMessages)));
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('chatMessages', JSON.stringify(allMessages));
-  }, [allMessages]);
+    // This effect runs only on the client, after the initial render.
+    const storedMessages = localStorage.getItem('chatMessages');
+    if (storedMessages) {
+        setAllMessages(JSON.parse(storedMessages));
+    }
+    setIsLoaded(true); // Mark as loaded to start rendering message-dependent UI
+  }, []);
+
+  useEffect(() => {
+    // This effect saves messages to localStorage whenever they change.
+    // It only runs after the initial load to prevent overwriting stored messages
+    // with initial state before they've been loaded.
+    if (isLoaded) {
+      localStorage.setItem('chatMessages', JSON.stringify(allMessages));
+    }
+  }, [allMessages, isLoaded]);
 
   const [community, setCommunity] = useState(communities[communityId]);
   
@@ -312,7 +318,7 @@ export default function ChatPage() {
                         </div>
                         <ScrollArea className="flex-grow mb-4 pr-4">
                             <div className="space-y-6 p-6">
-                            {messages.map((msg: any, index: number) => (
+                            {isLoaded && messages.map((msg: any, index: number) => (
                                 <div key={index} className={`flex items-start gap-4 ${msg.sender === 'You' ? 'justify-end' : ''}`}>
                                 {msg.sender !== 'You' && (
                                     <Avatar className="h-10 w-10">
@@ -338,7 +344,7 @@ export default function ChatPage() {
                                 )}
                                 </div>
                             ))}
-                            {messages.length === 0 && (
+                            {isLoaded && messages.length === 0 && (
                                 <div className="text-center text-gray-500 dark:text-gray-400 py-10">
                                 <p>No messages yet. Be the first to say something!</p>
                                 </div>
@@ -437,5 +443,7 @@ export default function ChatPage() {
     </div>
   );
 }
+
+    
 
     
