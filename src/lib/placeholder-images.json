@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "A vibrant street scene with a prominent red building, giving a vintage feel.",
-      "imageUrl": "https://picsum.photos/seed/red-building/800/1000",
-      "imageHint": "street scene"
+      "description": "An artistic image of strawberries floating in a dark, cosmic liquid with colorful swirls.",
+      "imageUrl": "https://picsum.photos/seed/strawberries/800/1000",
+      "imageHint": "strawberries space"
     },
     {
       "id": "hobby-communities",
