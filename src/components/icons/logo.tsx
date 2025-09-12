@@ -15,10 +15,11 @@ export function Logo({ className, ...props }: React.ComponentProps<"svg">) {
       {...props}
     >
       <title>BondOverHobbies Logo</title>
-      <path d="M10.3 21.7a2 2 0 1 1-3.8-1.4l5-8.6a2 2 0 1 1 3.5 2l-4.7 8Z" />
-      <path d="M14.2 3.4a2 2 0 1 1 .6 3.8L9.7 12a2 2 0 1 1-3.5-2l5-8.6Z" />
-      <path d="m22 7-4.7 8-4.7-8" />
-      <path d="m17.3 15-4.7-8" />
+      <path d="M17.5 19l-3-3" />
+      <path d="M6.5 5l3 3" />
+      <path d="M12 22a7 7 0 0 0-7-7" />
+      <path d="M12 2a7 7 0 0 0 7 7" />
+      <path d="m12 8 2 2-2 2-2-2 2-2z" />
     </svg>
   );
 }
