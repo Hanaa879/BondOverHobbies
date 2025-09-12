@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "An abstract painting of strawberries floating in a cosmic-looking liquid.",
-      "imageUrl": "https://picsum.photos/seed/strawberry/800/1000",
-      "imageHint": "strawberry abstract"
+      "description": "A vibrant street scene with a prominent red building, giving a vintage feel.",
+      "imageUrl": "https://picsum.photos/seed/red-building/800/1000",
+      "imageHint": "street scene"
     },
     {
       "id": "hobby-communities",
