@@ -98,7 +98,8 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
   const router = useRouter();
 
   if (!communities[communityId]) {
-      communities[communityId] = { name: 'Unknown Community', avatar: `https://picsum.photos/seed/${communityId}/100/100`, interests: 'General interests', channels: ['general'] };
+      const name = communityId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      communities[communityId] = { name: name, avatar: `https://picsum.photos/seed/${communityId}/100/100`, interests: 'General interests', channels: ['general'] };
   }
   if (!initialMessages[communityId]) {
     initialMessages[communityId] = {};
