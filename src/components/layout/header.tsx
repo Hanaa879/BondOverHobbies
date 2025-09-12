@@ -4,16 +4,38 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Sprout } from "lucide-react";
+import { Menu, Sprout, ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { UserNav } from "./user-nav";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export function Header() {
   const pathname = usePathname();
   const isSignedIn = ["/dashboard", "/hobbies", "/events", "/showcase", "/discover"].some(path => pathname.startsWith(path));
 
+  const hobbyCategories = [
+      "Creative Arts & Crafts",
+      "Sports & Fitness",
+      "Gaming",
+      "Technology & Coding",
+      "Music & Performing Arts",
+      "Food & Drink",
+      "Outdoor & Adventure",
+      "Collecting",
+  ];
+
   const navLinks = [
-    { href: "/hobbies", label: "Hobbies" },
     { href: "/events", label: "Events" },
     { href: "/showcase", label: "Showcase" },
     { href: "/discover", label: "Discover" },
@@ -30,9 +52,22 @@ export function Header() {
             </span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 transition-colors hover:text-foreground/80 text-foreground/60 outline-none">
+                Hobbies <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {hobbyCategories.map((category) => (
+                    <DropdownMenuItem key={category} asChild>
+                        <Link href={`/hobbies/${category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}>{category}</Link>
+                    </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {navLinks.map((link) => (
               <Link
-                key={link.href + link.label}
+                key={link.href}
                 href={link.href}
                 className="transition-colors hover:text-foreground/80 text-foreground/60"
               >
@@ -60,8 +95,20 @@ export function Header() {
                   <span className="font-bold font-headline">BondOverHobbies</span>
                 </Link>
                 <div className="flex flex-col space-y-3 pt-6">
+                    <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="hobbies">
+                            <AccordionTrigger className="hover:no-underline text-foreground">Hobbies</AccordionTrigger>
+                            <AccordionContent>
+                                <div className="flex flex-col space-y-3 pl-4">
+                                {hobbyCategories.map((category) => (
+                                    <Link key={category} href={`/hobbies/${category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`} className="text-foreground/80">{category}</Link>
+                                ))}
+                                </div>
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                   {navLinks.map((link) => (
-                    <Link key={link.href + link.label} href={link.href} className="text-foreground">
+                    <Link key={link.href} href={link.href} className="text-foreground pl-4">
                       {link.label}
                     </Link>
                   ))}
