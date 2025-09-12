@@ -51,7 +51,7 @@ export default function SignInPage() {
       title: "Signed In!",
       description: "You've successfully signed in.",
     });
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (

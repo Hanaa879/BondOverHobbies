@@ -60,7 +60,7 @@ export default function SignUpPage() {
         </Button>
       )
     });
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (
