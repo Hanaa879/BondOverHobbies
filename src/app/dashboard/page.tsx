@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,67 +12,88 @@ import { Search, MessageSquare, PlusCircle, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function DashboardPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const router = useRouter();
-
-  // Mock data - in a real app, this would come from your backend
-  const [userHobbies, setUserHobbies] = useState(['Photography', 'Hiking', 'Cooking']);
-  const [recentConversations, setRecentConversations] = useState([
-    {
-      id: 1,
-      name: 'Photography Club',
-      lastMessage: 'Alice: That shot is amazing!',
-      avatar: 'https://picsum.photos/seed/p-club/100/100',
-    },
-    {
-      id: 2,
-      name: 'Weekend Hikers',
-      lastMessage: 'Bob: Are we still on for Saturday?',
-      avatar: 'https://picsum.photos/seed/hikers/100/100',
-    },
-    {
-      id: 3,
-      name: 'Creative Cooks',
-      lastMessage: 'You: I just tried the new recipe, it was delicious!',
-      avatar: 'https://picsum.photos/seed/cooks/100/100',
-    },
-  ]);
-
-  const [discoverableCommunities, setDiscoverableCommunities] = useState([
+// Mock data - in a real app, this would come from your backend
+const initialUserHobbies = ['Photography', 'Hiking', 'Cooking'];
+const initialRecentConversations = [
+  {
+    id: 1,
+    name: 'Photography Club',
+    lastMessage: 'Alice: That shot is amazing!',
+    avatar: 'https://picsum.photos/seed/p-club/100/100',
+    communityId: '1'
+  },
+  {
+    id: 2,
+    name: 'Weekend Hikers',
+    lastMessage: 'Bob: Are we still on for Saturday?',
+    avatar: 'https://picsum.photos/seed/hikers/100/100',
+    communityId: '2'
+  },
+  {
+    id: 3,
+    name: 'Creative Cooks',
+    lastMessage: 'You: I just tried the new recipe, it was delicious!',
+    avatar: 'https://picsum.photos/seed/cooks/100/100',
+    communityId: '3'
+  },
+];
+const initialDiscoverableCommunities = [
     {
       id: 4,
       name: 'Running Club',
       description: 'For all levels of runners.',
-      avatar: 'https://picsum.photos/seed/running/100/100'
+      avatar: 'https://picsum.photos/seed/running/100/100',
+      communityId: '4'
     },
      {
       id: 5,
       name: 'Bookworms Unite',
       description: 'Discussing everything from classics to modern hits.',
-      avatar: 'https://picsum.photos/seed/books/100/100'
+      avatar: 'https://picsum.photos/seed/books/100/100',
+      communityId: '5'
     },
-  ]);
+];
 
-  const handleJoinCommunity = (community: { id: number; name: string; description: string; avatar: string; }) => {
-    // Add to conversations
-    setRecentConversations(prev => [...prev, {
+export default function DashboardPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  const [userHobbies, setUserHobbies] = useState(initialUserHobbies);
+  const [recentConversations, setRecentConversations] = useState(initialRecentConversations);
+  const [discoverableCommunities, setDiscoverableCommunities] = useState(initialDiscoverableCommunities);
+
+  useEffect(() => {
+    const storedHobbies = localStorage.getItem('userHobbies');
+    if (storedHobbies) {
+        setUserHobbies(JSON.parse(storedHobbies));
+    }
+    const storedConversations = localStorage.getItem('recentConversations');
+    if (storedConversations) {
+        setRecentConversations(JSON.parse(storedConversations));
+    }
+  }, []);
+
+  const handleJoinCommunity = (community: { id: number; name: string; description: string; avatar: string; communityId: string }) => {
+    const newConversations = [...recentConversations, {
       id: community.id,
       name: community.name,
       lastMessage: `You just joined the ${community.name} community!`,
       avatar: community.avatar,
-    }]);
+      communityId: community.communityId
+    }];
+    setRecentConversations(newConversations);
+    localStorage.setItem('recentConversations', JSON.stringify(newConversations));
 
-    // Remove from discoverable
-    setDiscoverableCommunities(prev => prev.filter(c => c.id !== community.id));
-
-    // Add to hobbies if not already there
+    const newDiscoverable = discoverableCommunities.filter(c => c.id !== community.id);
+    setDiscoverableCommunities(newDiscoverable);
+    
     if (!userHobbies.includes(community.name)) {
-      setUserHobbies(prev => [...prev, community.name]);
+        const newHobbies = [...userHobbies, community.name];
+        setUserHobbies(newHobbies);
+        localStorage.setItem('userHobbies', JSON.stringify(newHobbies));
     }
     
-    // Navigate to chat's default channel
-    router.push(`/dashboard/chat/${community.id}/general`);
+    router.push(`/dashboard/chat/${community.communityId}/general`);
   };
 
   const filteredConversations = recentConversations.filter(
@@ -156,7 +177,7 @@ export default function DashboardPage() {
                   <div className="space-y-4">
                     {filteredConversations.length > 0 ? (
                       filteredConversations.map((convo) => (
-                        <Link href={`/dashboard/chat/${convo.id}/general`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                        <Link href={`/dashboard/chat/${convo.communityId}/general`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
                           <Avatar className="h-12 w-12 mr-4">
                             <AvatarImage src={convo.avatar} alt={convo.name} />
                             <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>

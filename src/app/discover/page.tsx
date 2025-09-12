@@ -47,14 +47,35 @@ export default function DiscoverPage() {
   };
 
   const handleJoinCommunity = (hobby: string) => {
-    // This is a mock implementation. In a real app, you'd have a more robust system
-    // for creating/finding community IDs.
     const communityId = hobby.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    
+    // In a real app, this would be a more robust state management solution
+    const storedHobbies = localStorage.getItem('userHobbies');
+    const hobbies = storedHobbies ? JSON.parse(storedHobbies) : [];
+    if (!hobbies.includes(hobby)) {
+      hobbies.push(hobby);
+      localStorage.setItem('userHobbies', JSON.stringify(hobbies));
+    }
+
+    const storedConversations = localStorage.getItem('recentConversations');
+    const conversations = storedConversations ? JSON.parse(storedConversations) : [];
+    if (!conversations.some((c: any) => c.communityId === communityId)) {
+        const newCommunity = {
+            id: conversations.length + 10, // simple unique id
+            name: hobby,
+            lastMessage: `You just joined the ${hobby} community!`,
+            avatar: `https://picsum.photos/seed/${communityId}/100/100`,
+            communityId: communityId
+        };
+        conversations.push(newCommunity);
+        localStorage.setItem('recentConversations', JSON.stringify(conversations));
+    }
+    
     toast({
         title: `Welcome to ${hobby}!`,
         description: `You've successfully joined the ${hobby} community.`,
     });
-    router.push(`/dashboard/chat/${communityId}/general`);
+    router.push(`/dashboard`);
   };
 
   return (
