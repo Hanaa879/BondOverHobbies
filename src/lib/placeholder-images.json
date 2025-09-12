@@ -3,9 +3,9 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "A cute pixel art style landscape with a soft color palette.",
-      "imageUrl": "https://picsum.photos/seed/pixel-landscape/800/1000",
-      "imageHint": "pixel art landscape"
+      "description": "A beautiful night sky full of stars and a crescent moon.",
+      "imageUrl": "https://picsum.photos/seed/stars-moon/800/1000",
+      "imageHint": "stars moon"
     },
     {
       "id": "hobby-communities",
