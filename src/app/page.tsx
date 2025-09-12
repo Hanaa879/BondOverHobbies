@@ -61,14 +61,6 @@ export default function Home() {
                     </p>
                   </div>
                   
-                  {/* Top Left decorative text */}
-                  <div className="absolute top-10 left-10 bg-gray-800 bg-opacity-70 p-4 border border-gray-500 rounded font-code">
-                    <p className="text-white">DEPRIVING YOU</p>
-                    <p className="text-white">DONT YOU FEEL</p>
-                    <p className="text-white">ITS GOIN BAD</p>
-                    <p className="text-white">FAKE SMILE</p>
-                  </div>
-
                    {/* Bottom Right "Join" Button */}
                   <div className="absolute bottom-10 right-10 bg-white p-3 border-2 border-gray-400 rounded-md shadow-2xl">
                     <p className="font-bold mb-2">Ready to Dive In?</p>
@@ -77,11 +69,6 @@ export default function Home() {
                         Join Now <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                     </Button>
-                  </div>
-                  
-                  {/* Bottom Left decorative text */}
-                  <div className="absolute bottom-10 left-10 bg-pink-500 text-white p-3 font-bold text-lg border-2 border-pink-300 transform -rotate-6">
-                    SAY YES TO EPIC LIFE!!! It's FREE!
                   </div>
               </div>
             </div>

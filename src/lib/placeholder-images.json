@@ -1,10 +1,11 @@
+
 {
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "An artistic image of strawberries floating in a dark, cosmic liquid with colorful swirls.",
-      "imageUrl": "https://picsum.photos/seed/strawberries/800/1000",
-      "imageHint": "strawberries space"
+      "description": "A cute pixel art style landscape with a soft color palette.",
+      "imageUrl": "https://picsum.photos/seed/pixel-landscape/800/1000",
+      "imageHint": "pixel art landscape"
     },
     {
       "id": "hobby-communities",
