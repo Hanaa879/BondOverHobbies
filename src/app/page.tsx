@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight, Bot, MessageSquare, ShoppingBag, Smile } from 'lucide-react';
+import { ArrowRight, MessageSquare, ShoppingBag, Smile } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
@@ -29,40 +29,47 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-white">
-          <div className="container mx-auto px-4 md:px-6 py-12">
-            <div className="relative">
+        <section className="bg-white py-12 md:py-20">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="relative flex justify-center items-center">
+              
+              {/* Stars top-left */}
               <div
-                className="absolute -top-8 -left-8 w-48 h-48 bg-no-repeat"
+                className="absolute -top-12 -left-12 w-36 h-36 bg-no-repeat opacity-50"
                 style={{ backgroundImage: "url('/stars.svg')" }}
               />
-              <div className="relative z-10 p-4 bg-white border-8 border-gray-800" style={{borderImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cstyle%3Epath%7Bfill:%231f2937%7D%3C/style%3E%3Cpath d=\'M0 10 V0 H10 L10 10 Z\'/%3E%3Cpath d=\'M90 10 V0 H100 L100 10 Z\'/%3E%3Cpath d=\'M0 90 V100 H10 L10 90 Z\'/%3E%3Cpath d=\'M90 90 V100 H100 L100 90 Z\'/%3E%3Cpath d=\'M10 0 H90 V10 H10 Z\'/%3E%3Cpath d=\'M10 90 H90 V100 H10 Z\'/%3E%3Cpath d=\'M0 10 H10 V90 H0 Z\'/%3E%3Cpath d=\'M90 10 H100 V90 H90 Z\'/%3E%3Crect x=\'10\' y=\'10\' width=\'80\' height=\'80\'/%3E%3C/svg%3E") 10 / 10px / 0 round' }}>
+              
+              {/* Arrow bottom-right */}
+              <svg width="100" height="100" className="absolute -bottom-16 -right-12 text-gray-800 opacity-30 transform scale-x-[-1] rotate-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 5v14" />
+                <path d="m19 12-7 7-7-7" />
+              </svg>
+              
+              <div className="relative p-4 bg-white transform -rotate-3" style={{boxShadow: '8px 8px 0px rgba(0,0,0,0.1)'}}>
                 {heroStampImage && (
                   <Image
                     src={heroStampImage.imageUrl}
                     alt={heroStampImage.description}
-                    width={1200}
-                    height={600}
+                    width={800}
+                    height={500}
                     className="object-cover w-full h-auto"
                     data-ai-hint={heroStampImage.imageHint}
                   />
                 )}
-                <div className="absolute bottom-4 right-4 flex items-center gap-2">
-                    <p className="font-bold text-lg text-white font-headline">experience</p>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.17 15.17c-.41.41-1.07.41-1.48 0-.41-.41-.41-1.07 0-1.48l3.48-3.48-3.48-3.48c-.41-.41-.41-1.07 0-1.48s1.07-.41 1.48 0l4.24 4.24c.41.41.41 1.07 0 1.48l-4.24 4.24z" fill="white"/>
-                    </svg>
+                <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center p-8">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white font-headline text-glow">
+                        Discover Your Next Passion
+                    </h1>
+                    <p className="mt-4 text-lg text-gray-200 max-w-md">
+                        Connect with fellow hobbyists, join events, and explore a world of creativity.
+                    </p>
+                    <Button size="lg" className="mt-8 bg-red-600 hover:bg-red-700 text-white animate-button-bounce" asChild>
+                        <Link href="#">
+                        Join Now <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
                 </div>
               </div>
-
-               <div className="absolute -bottom-10 right-10 md:right-20 z-20 transform -translate-y-1/2">
-                <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 10 H90 V70 H60 L40 90 V70 H10 Z" fill="white" stroke="black" strokeWidth="4"/>
-                    <circle cx="30" cy="40" r="4" fill="black"/>
-                    <circle cx="50" cy="40" r="4" fill="black"/>
-                    <circle cx="70" cy="40" r="4" fill="black"/>
-                </svg>
-               </div>
             </div>
           </div>
         </section>
