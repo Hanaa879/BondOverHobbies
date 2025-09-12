@@ -15,12 +15,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, Sprout } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { Logo } from "@/components/icons/logo";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -69,7 +70,7 @@ export default function SignUpPage() {
       <main className="flex-grow flex items-center justify-center bg-gray-100 dark:bg-gray-900 py-12">
         <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
           <div className="text-center">
-            <Sprout className="mx-auto h-12 w-12 text-primary" />
+            <Logo className="mx-auto h-12 w-12 text-primary" />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">
               Create your account
             </h1>

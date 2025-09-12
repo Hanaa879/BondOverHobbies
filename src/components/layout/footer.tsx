@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Sprout, Twitter, Instagram, Facebook } from "lucide-react";
+import { Twitter, Instagram, Facebook } from "lucide-react";
+import { Logo } from "../icons/logo";
 
 export function Footer() {
   return (
@@ -7,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center space-x-2">
-            <Sprout className="h-6 w-6 text-primary" />
+            <Logo />
             <span className="font-bold text-lg font-headline">BondOverHobbies</span>
           </div>
           <nav className="flex flex-wrap justify-center gap-4 md:gap-6 text-sm text-muted-foreground">

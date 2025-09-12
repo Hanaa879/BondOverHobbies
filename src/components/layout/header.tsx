@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Sprout, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { UserNav } from "./user-nav";
 import {
@@ -19,6 +19,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Logo } from "../icons/logo";
 
 export function Header() {
   const pathname = usePathname();
@@ -46,7 +47,7 @@ export function Header() {
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Sprout className="h-6 w-6 text-primary" />
+            <Logo />
             <span className="hidden font-bold sm:inline-block font-headline">
               BondOverHobbies
             </span>
@@ -91,7 +92,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="left" className="pr-0">
                 <Link href="/" className="mr-6 flex items-center space-x-2">
-                  <Sprout className="h-6 w-6 text-primary" />
+                  <Logo />
                   <span className="font-bold font-headline">BondOverHobbies</span>
                 </Link>
                 <div className="flex flex-col space-y-3 pt-6">
