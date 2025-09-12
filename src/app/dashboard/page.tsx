@@ -37,6 +37,16 @@ export default function DashboardPage() {
     },
   ];
 
+  const filteredConversations = recentConversations.filter(
+    (convo) =>
+      convo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      convo.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredHobbies = userHobbies.filter((hobby) =>
+    hobby.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -65,21 +75,25 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {recentConversations.map((convo) => (
-                      <Link href={`/dashboard/chat/${convo.id}`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
-                        <Avatar className="h-12 w-12 mr-4">
-                          <AvatarImage src={convo.avatar} alt={convo.name} />
-                          <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-grow">
-                          <p className="font-semibold">{convo.name}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            {convo.lastMessage}
-                          </p>
-                        </div>
-                        <MessageSquare className="h-5 w-5 text-gray-400" />
-                      </Link>
-                    ))}
+                    {filteredConversations.length > 0 ? (
+                      filteredConversations.map((convo) => (
+                        <Link href={`/dashboard/chat/${convo.id}`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                          <Avatar className="h-12 w-12 mr-4">
+                            <AvatarImage src={convo.avatar} alt={convo.name} />
+                            <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-grow">
+                            <p className="font-semibold">{convo.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                              {convo.lastMessage}
+                            </p>
+                          </div>
+                          <MessageSquare className="h-5 w-5 text-gray-400" />
+                        </Link>
+                      ))
+                    ) : (
+                      <p className="text-center text-gray-500 dark:text-gray-400 py-4">No conversations found.</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -97,9 +111,9 @@ export default function DashboardPage() {
                   </Button>
                 </CardHeader>
                 <CardContent>
-                  {userHobbies.length > 0 ? (
+                  {filteredHobbies.length > 0 ? (
                     <ul className="space-y-2">
-                      {userHobbies.map((hobby) => (
+                      {filteredHobbies.map((hobby) => (
                         <li key={hobby} className="flex items-center text-sm">
                           <span className="h-2 w-2 bg-primary rounded-full mr-2"></span>
                           {hobby}
@@ -107,12 +121,16 @@ export default function DashboardPage() {
                       ))}
                     </ul>
                   ) : (
+                    userHobbies.length > 0 ? (
+                      <p className="text-center text-gray-500 dark:text-gray-400 py-4">No hobbies found for your search.</p>
+                    ) : (
                     <div className="text-center text-gray-500 dark:text-gray-400 py-4">
                       <p>You haven&apos;t added any hobbies yet.</p>
                       <Button variant="link" className="mt-2" asChild>
                         <Link href="/discover">Find Hobbies</Link>
                       </Button>
                     </div>
+                    )
                   )}
                 </CardContent>
               </Card>
