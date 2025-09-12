@@ -51,7 +51,7 @@ export default function Home() {
                     src={heroStampImage.imageUrl}
                     alt={heroStampImage.description}
                     width={800}
-                    height={500}
+                    height={1000}
                     className="object-cover w-full h-auto"
                     data-ai-hint={heroStampImage.imageHint}
                   />
@@ -63,7 +63,7 @@ export default function Home() {
                     <p className="mt-4 text-lg text-gray-200 max-w-md">
                         Connect with fellow hobbyists, join events, and explore a world of creativity.
                     </p>
-                    <Button size="lg" className="mt-8 bg-red-600 hover:bg-red-700 text-white animate-button-bounce" asChild>
+                    <Button size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground animate-button-bounce" asChild>
                         <Link href="#">
                         Join Now <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
@@ -74,16 +74,16 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-red-600 text-white">
+        <section className="bg-primary text-primary-foreground">
            <div className="container mx-auto px-4 md:px-6 py-12">
               <h2 className="text-4xl font-bold text-center mb-8 font-headline">BondOverHobbies</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {heroFeatures.map((feature, index) => (
-                  <div key={index} className="bg-pink-100/90 text-red-900 p-6 rounded-lg flex items-center gap-4 shadow-lg">
+                  <div key={index} className="bg-background/20 text-foreground p-6 rounded-lg flex items-center gap-4 shadow-lg">
                     <div className="flex-shrink-0 bg-gray-800/10 p-3 rounded-md">
                         {feature.icon}
                     </div>
-                    <p className="font-medium">{feature.text}</p>
+                    <p className="font-medium text-primary-foreground">{feature.text}</p>
                   </div>
                 ))}
               </div>
@@ -97,7 +97,7 @@ export default function Home() {
               <p className="mt-4 text-lg text-gray-300 max-w-xl mx-auto">
                 Join our community today and start connecting with people who share your passion.
               </p>
-              <Button size="lg" className="mt-8 bg-red-600 hover:bg-red-700 text-white" asChild>
+              <Button size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
                 <Link href="#">
                   Join Now <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
