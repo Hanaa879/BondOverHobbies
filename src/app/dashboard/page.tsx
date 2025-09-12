@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Search, MessageSquare, PlusCircle } from 'lucide-react';
+import { Search, MessageSquare, PlusCircle, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
@@ -37,6 +37,21 @@ export default function DashboardPage() {
     },
   ];
 
+  const discoverableCommunities = [
+    {
+      id: 4,
+      name: 'Running Club',
+      description: 'For all levels of runners.',
+      avatar: 'https://picsum.photos/seed/running/100/100'
+    },
+     {
+      id: 5,
+      name: 'Bookworms Unite',
+      description: 'Discussing everything from classics to modern hits.',
+      avatar: 'https://picsum.photos/seed/books/100/100'
+    },
+  ]
+
   const filteredConversations = recentConversations.filter(
     (convo) =>
       convo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -46,6 +61,14 @@ export default function DashboardPage() {
   const filteredHobbies = userHobbies.filter((hobby) =>
     hobby.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  
+  const filteredDiscoverable = discoverableCommunities.filter(
+    (community) =>
+      community.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      community.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const showDiscover = searchQuery.length > 0 && filteredDiscoverable.length > 0;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -65,7 +88,40 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Left Column */}
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 space-y-8">
+              {showDiscover && (
+                 <Card>
+                  <CardHeader>
+                    <CardTitle>Discover Communities</CardTitle>
+                    <CardDescription>
+                      Join communities that match your search.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {filteredDiscoverable.map((community) => (
+                          <div key={community.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                            <Avatar className="h-12 w-12 mr-4">
+                              <AvatarImage src={community.avatar} alt={community.name} />
+                              <AvatarFallback>{community.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex-grow">
+                              <p className="font-semibold">{community.name}</p>
+                              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                {community.description}
+                              </p>
+                            </div>
+                             <Button size="sm">
+                              <Plus className="mr-2 h-4 w-4" />
+                              Join
+                            </Button>
+                          </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               <Card>
                 <CardHeader>
                   <CardTitle>Recent Conversations</CardTitle>
