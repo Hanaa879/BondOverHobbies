@@ -7,7 +7,6 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
 export default function Home() {
-  const heroStampImage = PlaceHolderImages.find(p => p.id === 'hero-background');
 
   const heroFeatures = [
     {
@@ -46,16 +45,14 @@ export default function Home() {
               </svg>
               
               <div className="relative p-4 bg-white transform -rotate-3" style={{boxShadow: '8px 8px 0px rgba(0,0,0,0.1)'}}>
-                {heroStampImage && (
-                  <Image
-                    src={heroStampImage.imageUrl}
-                    alt={heroStampImage.description}
+                <Image
+                    src="https://storage.googleapis.com/aifirebase-images/strawberry-art.png"
+                    alt="An artistic image of strawberries floating in a dark, cosmic liquid with colorful swirls."
                     width={800}
                     height={1000}
                     className="object-cover w-full h-auto"
-                    data-ai-hint={heroStampImage.imageHint}
+                    data-ai-hint="strawberries space"
                   />
-                )}
                 <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center p-8">
                     <h1 className="text-4xl md:text-5xl font-bold text-white font-headline text-glow">
                         Discover Your Next Passion
