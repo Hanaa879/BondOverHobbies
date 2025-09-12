@@ -30,14 +30,15 @@ export function AIAssistantWidget() {
         e.preventDefault();
         if (input.trim() === '') return;
 
-        const newMessages: Message[] = [...messages, { role: 'user', content: input }];
+        const userMessage: Message = { role: 'user', content: input };
+        const newMessages: Message[] = [...messages, userMessage];
         setMessages(newMessages);
         setInput('');
         setIsLoading(true);
 
         try {
             const result = await mentalHealthAssistant({
-                messageHistory: newMessages,
+                messageHistory: newMessages.map(m => ({ role: m.role, content: m.content })),
             });
             setMessages(prev => [...prev, { role: 'model', content: result.response }]);
         } catch (error) {
