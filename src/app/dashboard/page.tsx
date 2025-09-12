@@ -1,4 +1,7 @@
 
+"use client";
+
+import { useState } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +12,8 @@ import { Search, MessageSquare, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Mock data - in a real app, this would come from your backend
   const userHobbies = ['Photography', 'Hiking', 'Cooking'];
   const recentConversations = [
@@ -43,6 +48,8 @@ export default function DashboardPage() {
               type="search"
               placeholder="Search for hobbies, events, or people..."
               className="w-full pl-10 pr-4 py-2 text-lg"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
