@@ -3,9 +3,9 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "A beautiful night sky full of stars and a crescent moon.",
-      "imageUrl": "https://picsum.photos/seed/stars-moon/800/1000",
-      "imageHint": "stars moon"
+      "description": "A tranquil image of a moon over water, with stars shining.",
+      "imageUrl": "https://picsum.photos/seed/moon-water/800/1000",
+      "imageHint": "moon water"
     },
     {
       "id": "hobby-communities",
