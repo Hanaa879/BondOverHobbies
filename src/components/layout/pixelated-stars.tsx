@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -8,7 +9,7 @@ export function PixelatedStars({ count = 100 }) {
   useEffect(() => {
     const generateStars = () => {
       const newStars = Array.from({ length: count }).map((_, i) => {
-        const size = Math.floor(Math.random() * 3) + 2; // 2px to 4px
+        const size = Math.floor(Math.random() * 4) + 3; // 3px to 6px
         const style = {
           position: 'absolute' as 'absolute',
           top: `${Math.random() * 100}%`,
