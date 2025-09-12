@@ -273,7 +273,7 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
         </aside>
 
         {/* Main Content Area */}
-        <div className="flex-grow flex flex-col relative">
+        <div className="flex-grow flex flex-col relative h-[calc(100vh-var(--header-height))]">
           <div 
               className="absolute inset-0 bg-cover bg-center z-0" 
               style={{ backgroundImage: `url(${community.backgroundUrl})` }}
@@ -286,7 +286,7 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
                         <TabsTrigger value="chat"><MessageCircle className="mr-2 h-4 w-4" />Chat</TabsTrigger>
                         <TabsTrigger value="events"><Calendar className="mr-2 h-4 w-4" />Events</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="chat" className="flex flex-col" style={{height: 'calc(100vh - 250px)'}}>
+                    <TabsContent value="chat" className="flex flex-col flex-grow">
                         <div className='border-b p-4 border-white/10'>
                             <h2 className="text-2xl font-bold flex items-center"><Hash className="h-6 w-6 mr-2 text-muted-foreground"/>{channelId}</h2>
                             <p className="text-sm text-muted-foreground">This is the start of the #{channelId} channel.</p>
@@ -377,7 +377,7 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
                             </form>
                         </div>
                     </TabsContent>
-                    <TabsContent value="events">
+                    <TabsContent value="events" className="flex-grow">
                         <div className="space-y-4 p-6">
                             {events.length > 0 ? (
                                 events.map(event => (
