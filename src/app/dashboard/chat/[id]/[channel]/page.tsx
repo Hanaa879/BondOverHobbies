@@ -19,7 +19,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 
 // Mock data
@@ -91,7 +91,8 @@ type Attachment = {
 };
 
 
-export default function ChatPage({ params }: { params: { id: string; channel: string } }) {
+export default function ChatPage() {
+  const params = useParams();
   const communityId = params.id as keyof typeof communities;
   const channelId = params.channel as string;
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -436,3 +437,5 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
     </div>
   );
 }
+
+    
