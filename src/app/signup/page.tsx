@@ -20,6 +20,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -36,6 +37,7 @@ const formSchema = z.object({
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = React.useState(false);
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,7 +54,13 @@ export default function SignUpPage() {
     toast({
       title: "Account Created!",
       description: "You've successfully signed up.",
+      action: (
+        <Button asChild variant="link" className="text-white">
+          <Link href="#">Sign In</Link>
+        </Button>
+      )
     });
+    router.push("/");
   }
 
   return (
