@@ -61,7 +61,7 @@ export default function Home() {
                         Connect with fellow hobbyists, join events, and explore a world of creativity.
                     </p>
                     <Button size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground animate-button-bounce" asChild>
-                        <Link href="#">
+                        <Link href="/signup">
                         Join Now <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                     </Button>
@@ -95,7 +95,7 @@ export default function Home() {
                 Join our community today and start connecting with people who share your passion.
               </p>
               <Button size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
-                <Link href="#">
+                <Link href="/signup">
                   Join Now <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
