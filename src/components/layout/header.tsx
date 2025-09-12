@@ -1,10 +1,17 @@
 
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Sprout } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { UserNav } from "./user-nav";
 
 export function Header() {
+  const pathname = usePathname();
+  const isSignedIn = ["/dashboard", "/hobbies", "/events", "/showcase", "/discover"].some(path => pathname.startsWith(path));
+
   const navLinks = [
     { href: "/hobbies", label: "Hobbies" },
     { href: "/events", label: "Events" },
@@ -62,14 +69,18 @@ export function Header() {
               </SheetContent>
             </Sheet>
           </div>
-          <nav className="hidden md:flex items-center gap-2">
-            <Button variant="ghost" asChild>
-                <Link href="/signin">Sign In</Link>
-            </Button>
-            <Button asChild>
-                <Link href="/signup">Sign Up</Link>
-            </Button>
-          </nav>
+          {isSignedIn ? (
+            <UserNav />
+          ) : (
+            <nav className="hidden md:flex items-center gap-2">
+              <Button variant="ghost" asChild>
+                  <Link href="/signin">Sign In</Link>
+              </Button>
+              <Button asChild>
+                  <Link href="/signup">Sign Up</Link>
+              </Button>
+            </nav>
+          )}
         </div>
       </div>
     </header>

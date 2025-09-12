@@ -10,13 +10,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Search, MessageSquare, PlusCircle, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   // Mock data - in a real app, this would come from your backend
-  const userHobbies = ['Photography', 'Hiking', 'Cooking'];
-  const recentConversations = [
+  const [userHobbies, setUserHobbies] = useState(['Photography', 'Hiking', 'Cooking']);
+  const [recentConversations, setRecentConversations] = useState([
     {
       id: 1,
       name: 'Photography Club',
@@ -35,9 +37,9 @@ export default function DashboardPage() {
       lastMessage: 'You: I just tried the new recipe, it was delicious!',
       avatar: 'https://picsum.photos/seed/cooks/100/100',
     },
-  ];
+  ]);
 
-  const discoverableCommunities = [
+  const [discoverableCommunities, setDiscoverableCommunities] = useState([
     {
       id: 4,
       name: 'Running Club',
@@ -50,7 +52,28 @@ export default function DashboardPage() {
       description: 'Discussing everything from classics to modern hits.',
       avatar: 'https://picsum.photos/seed/books/100/100'
     },
-  ]
+  ]);
+
+  const handleJoinCommunity = (community: { id: number; name: string; description: string; avatar: string; }) => {
+    // Add to conversations
+    setRecentConversations(prev => [...prev, {
+      id: community.id,
+      name: community.name,
+      lastMessage: `You just joined the ${community.name} community!`,
+      avatar: community.avatar,
+    }]);
+
+    // Remove from discoverable
+    setDiscoverableCommunities(prev => prev.filter(c => c.id !== community.id));
+
+    // Add to hobbies if not already there
+    if (!userHobbies.includes(community.name)) {
+      setUserHobbies(prev => [...prev, community.name]);
+    }
+    
+    // Navigate to chat
+    router.push(`/dashboard/chat/${community.id}`);
+  };
 
   const filteredConversations = recentConversations.filter(
     (convo) =>
@@ -111,7 +134,7 @@ export default function DashboardPage() {
                                 {community.description}
                               </p>
                             </div>
-                             <Button size="sm">
+                             <Button size="sm" onClick={() => handleJoinCommunity(community)}>
                               <Plus className="mr-2 h-4 w-4" />
                               Join
                             </Button>
