@@ -49,7 +49,7 @@ export default function DiscoverPage() {
   const handleJoinCommunity = (hobby: string) => {
     // This is a mock implementation. In a real app, you'd have a more robust system
     // for creating/finding community IDs.
-    const communityId = hobby.toLowerCase().replace(/\s+/g, '-');
+    const communityId = hobby.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     toast({
         title: `Joined ${hobby}!`,
         description: `You are now a member of the ${hobby} community.`,
@@ -75,6 +75,11 @@ export default function DiscoverPage() {
                 placeholder="e.g., being creative, outdoors, technology, fantasy books"
                 value={interests}
                 onChange={(e) => setInterests(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleGetRecommendations();
+                  }
+                }}
               />
                <p className="text-xs text-muted-foreground">Separate different interests with a comma.</p>
             </div>
