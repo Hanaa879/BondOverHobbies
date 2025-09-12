@@ -35,7 +35,7 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-white py-12 md:py-20">
+        <section className="bg-white py-10 md:py-12">
           <div className="container mx-auto px-4 md:px-6">
             <div className="relative flex justify-center items-center">
               
@@ -57,7 +57,7 @@ export default function Home() {
                     alt={heroImage.description}
                     width={800}
                     height={1000}
-                    className="object-cover w-full h-auto"
+                    className="object-cover w-full h-auto max-h-[70vh]"
                     data-ai-hint={heroImage.imageHint}
                     priority
                   />
