@@ -8,7 +8,7 @@ export function PixelatedStars({ count = 100 }) {
   useEffect(() => {
     const generateStars = () => {
       const newStars = Array.from({ length: count }).map((_, i) => {
-        const size = Math.floor(Math.random() * 2) + 1; // 1px to 2px
+        const size = Math.floor(Math.random() * 3) + 2; // 2px to 4px
         const style = {
           position: 'absolute' as 'absolute',
           top: `${Math.random() * 100}%`,
@@ -17,17 +17,12 @@ export function PixelatedStars({ count = 100 }) {
         };
         const starStyle = {
             width: `${size}px`,
-            height: `${size * 3}px`,
-        }
-         const starStyle2 = {
-            width: `${size * 3}px`,
             height: `${size}px`,
         }
 
         return (
             <div key={i} className="star-wrapper" style={style}>
                 <div className="star" style={starStyle} />
-                <div className="star" style={starStyle2} />
             </div>
         );
       });
