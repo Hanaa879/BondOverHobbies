@@ -23,9 +23,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
@@ -34,14 +31,13 @@ const formSchema = z.object({
   }),
 });
 
-export default function SignUpPage() {
+export default function SignInPage() {
   const [showPassword, setShowPassword] = React.useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
@@ -52,13 +48,8 @@ export default function SignUpPage() {
     // In a real app, you would send this to your authentication server.
     console.log(values);
     toast({
-      title: "Account Created!",
-      description: "You've successfully signed up.",
-      action: (
-        <Button asChild variant="link" className="text-white">
-          <Link href="/signin">Sign In</Link>
-        </Button>
-      )
+      title: "Signed In!",
+      description: "You've successfully signed in.",
     });
     router.push("/");
   }
@@ -71,27 +62,14 @@ export default function SignUpPage() {
           <div className="text-center">
             <Sprout className="mx-auto h-12 w-12 text-primary" />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">
-              Create your account
+              Sign in to your account
             </h1>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              to start your hobby journey with BondOverHobbies.
+              to continue your hobby journey with BondOverHobbies.
             </p>
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="email"
@@ -136,17 +114,17 @@ export default function SignUpPage() {
                 )}
               />
               <Button type="submit" className="w-full">
-                Create Account
+                Sign In
               </Button>
             </form>
           </Form>
           <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link
-              href="/signin"
+              href="/signup"
               className="font-medium text-primary hover:underline"
             >
-              Sign In
+              Sign Up
             </Link>
           </p>
         </div>

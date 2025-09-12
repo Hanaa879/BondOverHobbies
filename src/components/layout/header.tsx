@@ -63,7 +63,7 @@ export function Header() {
           </div>
           <nav className="hidden md:flex items-center gap-2">
             <Button variant="ghost" asChild>
-                <Link href="#">Sign In</Link>
+                <Link href="/signin">Sign In</Link>
             </Button>
             <Button asChild>
                 <Link href="/signup">Sign Up</Link>
