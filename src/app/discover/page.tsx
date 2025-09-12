@@ -49,16 +49,15 @@ export default function DiscoverPage() {
   const handleJoinCommunity = (hobby: string) => {
     const communityId = hobby.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     
-    // In a real app, this would be a more robust state management solution
     const storedHobbies = localStorage.getItem('userHobbies');
-    const hobbies = storedHobbies ? JSON.parse(storedHobbies) : [];
+    let hobbies = storedHobbies ? JSON.parse(storedHobbies) : [];
     if (!hobbies.includes(hobby)) {
       hobbies.push(hobby);
       localStorage.setItem('userHobbies', JSON.stringify(hobbies));
     }
 
     const storedConversations = localStorage.getItem('recentConversations');
-    const conversations = storedConversations ? JSON.parse(storedConversations) : [];
+    let conversations = storedConversations ? JSON.parse(storedConversations) : [];
     if (!conversations.some((c: any) => c.communityId === communityId)) {
         const newCommunity = {
             id: conversations.length + 10, // simple unique id

@@ -67,14 +67,14 @@ export default function SignUpPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow flex items-center justify-center bg-gray-100 dark:bg-gray-900 py-12">
-        <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+      <main className="flex-grow flex items-center justify-center bg-gray-100/5 dark:bg-gray-900/5 py-12">
+        <div className="w-full max-w-md p-8 space-y-8 bg-card rounded-lg shadow-md">
           <div className="text-center">
             <Logo className="mx-auto h-12 w-12 text-primary" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">
+            <h1 className="text-2xl font-bold text-foreground mt-4">
               Join Your New Community
             </h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-sm text-muted-foreground">
               to begin your journey with BondOverHobbies.
             </p>
           </div>
@@ -141,7 +141,7 @@ export default function SignUpPage() {
               </Button>
             </form>
           </Form>
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-center text-sm text-muted-foreground">
             Already part of our universe?{" "}
             <Link
               href="/signin"

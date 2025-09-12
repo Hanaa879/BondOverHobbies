@@ -52,13 +52,20 @@ const initialDiscoverableCommunities = [
       avatar: 'https://picsum.photos/seed/books/100/100',
       communityId: '5'
     },
+    {
+      id: 6,
+      name: 'Creative Arts & Crafts',
+      description: 'A place for artists to share and collaborate.',
+      avatar: 'https://picsum.photos/seed/arts/100/100',
+      communityId: 'creative-arts-crafts'
+    }
 ];
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
-  const [userHobbies, setUserHobbies] = useState(initialUserHobbies);
+  const [userHobbies, setUserHobbies] = useState<string[]>([]);
   const [recentConversations, setRecentConversations] = useState(initialRecentConversations);
   const [discoverableCommunities, setDiscoverableCommunities] = useState(initialDiscoverableCommunities);
 
@@ -66,7 +73,10 @@ export default function DashboardPage() {
     const storedHobbies = localStorage.getItem('userHobbies');
     if (storedHobbies) {
         setUserHobbies(JSON.parse(storedHobbies));
+    } else {
+        setUserHobbies(initialUserHobbies);
     }
+
     const storedConversations = localStorage.getItem('recentConversations');
     if (storedConversations) {
         setRecentConversations(JSON.parse(storedConversations));
@@ -74,15 +84,17 @@ export default function DashboardPage() {
   }, []);
 
   const handleJoinCommunity = (community: { id: number; name: string; description: string; avatar: string; communityId: string }) => {
-    const newConversations = [...recentConversations, {
+    const newConversation = {
       id: community.id,
       name: community.name,
       lastMessage: `You just joined the ${community.name} community!`,
       avatar: community.avatar,
       communityId: community.communityId
-    }];
-    setRecentConversations(newConversations);
-    localStorage.setItem('recentConversations', JSON.stringify(newConversations));
+    };
+    
+    const updatedConversations = [...recentConversations, newConversation];
+    setRecentConversations(updatedConversations);
+    localStorage.setItem('recentConversations', JSON.stringify(updatedConversations));
 
     const newDiscoverable = discoverableCommunities.filter(c => c.id !== community.id);
     setDiscoverableCommunities(newDiscoverable);
@@ -117,7 +129,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow bg-gray-100 dark:bg-gray-900">
+      <main className="flex-grow bg-gray-100/5 dark:bg-gray-900/5">
         <div className="container mx-auto px-4 md:px-6 py-8">
           <div className="relative mb-8">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -144,14 +156,14 @@ export default function DashboardPage() {
                   <CardContent>
                     <div className="space-y-4">
                       {filteredDiscoverable.map((community) => (
-                          <div key={community.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                          <div key={community.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-muted/50 transition-colors">
                             <Avatar className="h-12 w-12 mr-4">
                               <AvatarImage src={community.avatar} alt={community.name} />
                               <AvatarFallback>{community.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div className="flex-grow">
                               <p className="font-semibold">{community.name}</p>
-                              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                              <p className="text-sm text-muted-foreground truncate">
                                 {community.description}
                               </p>
                             </div>
@@ -177,14 +189,14 @@ export default function DashboardPage() {
                   <div className="space-y-4">
                     {filteredConversations.length > 0 ? (
                       filteredConversations.map((convo) => (
-                        <Link href={`/dashboard/chat/${convo.communityId}/general`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                        <Link href={`/dashboard/chat/${convo.communityId}/general`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-muted/50 transition-colors">
                           <Avatar className="h-12 w-12 mr-4">
                             <AvatarImage src={convo.avatar} alt={convo.name} />
                             <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
                           </Avatar>
                           <div className="flex-grow">
                             <p className="font-semibold">{convo.name}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                            <p className="text-sm text-muted-foreground truncate">
                               {convo.lastMessage}
                             </p>
                           </div>
@@ -192,7 +204,7 @@ export default function DashboardPage() {
                         </Link>
                       ))
                     ) : (
-                      <p className="text-center text-gray-500 dark:text-gray-400 py-4">No conversations found. Time to start one!</p>
+                      <p className="text-center text-muted-foreground py-4">No conversations found. Time to start one!</p>
                     )}
                   </div>
                 </CardContent>
@@ -222,9 +234,9 @@ export default function DashboardPage() {
                     </ul>
                   ) : (
                     userHobbies.length > 0 ? (
-                      <p className="text-center text-gray-500 dark:text-gray-400 py-4">No hobbies found for your search.</p>
+                      <p className="text-center text-muted-foreground py-4">No hobbies found for your search.</p>
                     ) : (
-                    <div className="text-center text-gray-500 dark:text-gray-400 py-4">
+                    <div className="text-center text-muted-foreground py-4">
                       <p>You haven't added any hobbies yet.</p>
                       <Button variant="link" className="mt-2" asChild>
                         <Link href="/discover">Find Hobbies</Link>
