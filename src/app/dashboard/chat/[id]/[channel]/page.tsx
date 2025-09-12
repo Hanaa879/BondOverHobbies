@@ -1,15 +1,17 @@
 
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Sparkles, Calendar, MapPin, Users, Hash, MessageCircle } from 'lucide-react';
+import { Send, Sparkles, Calendar, MapPin, Users, Hash, MessageCircle, Paperclip, X } from 'lucide-react';
 import { aiChatAssistant } from '@/ai/flows/ai-chat-assistant';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -78,10 +80,17 @@ const communityEvents = {
     ]
 }
 
+type Attachment = {
+  url: string;
+  type: 'image' | 'video';
+  fileName: string;
+};
+
 
 export default function ChatPage({ params }: { params: { id: string; channel: string } }) {
   const communityId = params.id as keyof typeof communities;
   const channelId = params.channel as string;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const community = communities[communityId] || { name: 'Unknown Community', avatar: '', interests: '', channels: ['general'] };
   
@@ -90,14 +99,20 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
   );
   
   const [newMessage, setNewMessage] = useState('');
+  const [attachment, setAttachment] = useState<Attachment | null>(null);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
   const { toast } = useToast();
   const events = communityEvents[communityId] || [];
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newMessage.trim()) {
-      const newMsgObject = { sender: 'You', message: newMessage, avatar: 'https://picsum.photos/seed/user-avatar/100/100' };
+    if (newMessage.trim() || attachment) {
+      const newMsgObject = { 
+        sender: 'You', 
+        message: newMessage, 
+        avatar: 'https://picsum.photos/seed/user-avatar/100/100',
+        attachment: attachment
+      };
       setMessages([...messages, newMsgObject]);
 
       // This is where you'd also update the main state/DB
@@ -106,6 +121,20 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
       }
       
       setNewMessage('');
+      setAttachment(null);
+    }
+  };
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        const url = loadEvent.target?.result as string;
+        const type = file.type.startsWith('image/') ? 'image' : 'video';
+        setAttachment({ url, type, fileName: file.name });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -191,7 +220,13 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
                             )}
                             <div className={`rounded-lg p-3 max-w-md ${msg.sender === 'You' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                                 <p className="font-semibold text-sm mb-1">{msg.sender}</p>
-                                <p>{msg.message}</p>
+                                {msg.attachment?.type === 'image' && (
+                                  <Image src={msg.attachment.url} alt="User attachment" width={300} height={200} className="rounded-md my-2" />
+                                )}
+                                {msg.attachment?.type === 'video' && (
+                                    <video src={msg.attachment.url} controls className="rounded-md my-2 max-w-full" />
+                                )}
+                                {msg.message && <p>{msg.message}</p>}
                             </div>
                             {msg.sender === 'You' && (
                                 <Avatar className="h-10 w-10">
@@ -209,22 +244,53 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
                         </div>
                     </ScrollArea>
 
-                    <div className="mt-auto bg-background p-4">
-                        <form onSubmit={handleSendMessage} className="flex items-center gap-4">
-                        <Input
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder={`Message #${channelId}`}
-                            className="flex-grow"
-                        />
-                        <Button type="button" variant="outline" size="icon" onClick={handleAssistantClick} disabled={isAssistantLoading}>
-                            <Sparkles className={`h-5 w-5 ${isAssistantLoading ? 'animate-spin' : ''}`} />
-                            <span className="sr-only">AI Assistant</span>
-                        </Button>
-                        <Button type="submit">
-                            <Send className="h-5 w-5" />
-                            <span className="sr-only">Send</span>
-                        </Button>
+                    <div className="mt-auto bg-background p-4 border-t">
+                        {attachment && (
+                            <div className="relative p-2 mb-2 border rounded-md">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute top-1 right-1 h-6 w-6"
+                                    onClick={() => setAttachment(null)}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                                {attachment.type === 'image' ? (
+                                    <Image src={attachment.url} alt={attachment.fileName} width={80} height={80} className="h-20 w-20 object-cover rounded-md"/>
+                                ) : (
+                                    <div className="flex items-center gap-2">
+                                        <video src={attachment.url} className="h-20 w-20 object-cover rounded-md bg-black" />
+                                        <span className="text-sm text-muted-foreground">{attachment.fileName}</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+                            <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()}>
+                                <Paperclip className="h-5 w-5" />
+                                <span className="sr-only">Attach file</span>
+                            </Button>
+                            <Input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                onChange={handleFileChange}
+                                accept="image/*,video/*"
+                            />
+                            <Input
+                                value={newMessage}
+                                onChange={(e) => setNewMessage(e.target.value)}
+                                placeholder={`Message #${channelId}`}
+                                className="flex-grow"
+                            />
+                            <Button type="button" variant="outline" size="icon" onClick={handleAssistantClick} disabled={isAssistantLoading}>
+                                <Sparkles className={`h-5 w-5 ${isAssistantLoading ? 'animate-spin' : ''}`} />
+                                <span className="sr-only">AI Assistant</span>
+                            </Button>
+                            <Button type="submit">
+                                <Send className="h-5 w-5" />
+                                <span className="sr-only">Send</span>
+                            </Button>
                         </form>
                     </div>
                 </TabsContent>
@@ -268,3 +334,5 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
     </div>
   );
 }
+
+    
