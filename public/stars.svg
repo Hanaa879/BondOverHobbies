@@ -1,12 +1,5 @@
-<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <pattern id="star-pattern" patternUnits="userSpaceOnUse" width="50" height="50">
-      <path d="M25 2 l5.87 17.9h18.82l-15.22 11.06 5.87 17.9-15.22-11.05-15.22 11.05 5.87-17.9-15.22-11.06h18.82z" fill="#FFD700"/>
-    </pattern>
-    <clipPath id="corner-clip">
-      <path d="M 0 0 L 200 0 C 100 100, 100 100, 0 200 Z" />
-    </clipPath>
-  </defs>
-  <rect width="200" height="200" fill="#1f2937" />
-  <rect width="200" height="200" fill="url(#star-pattern)" clip-path="url(#corner-clip)" />
+<svg width="150" height="150" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M50 0L55.9017 44.0983L100 50L55.9017 55.9017L50 100L44.0983 55.9017L0 50L44.0983 44.0983L50 0Z" fill="#F5C518"/>
+<path d="M90 20L92.9508 37.0492L110 40L92.9508 42.9508L90 60L87.0492 42.9508L70 40L87.0492 37.0492L90 20Z" fill="#F5C518" fill-opacity="0.7"/>
+<path d="M20 80L22.9508 97.0492L40 100L22.9508 102.951L20 120L17.0492 102.951L0 100L17.0492 97.0492L20 80Z" fill="#F5C518" fill-opacity="0.5"/>
 </svg>
