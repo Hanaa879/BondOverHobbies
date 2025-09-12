@@ -84,12 +84,12 @@
     
     @keyframes pulsating-glow {
         0%, 100% {
-            text-shadow: 0 0 5px hsl(var(--primary) / 0.5), 0 0 10px hsl(var(--primary) / 0.3), 0 0 15px hsl(var(--primary) / 0.1);
-            filter: drop-shadow(0 0 2px hsl(var(--primary) / 0.5));
+            text-shadow: 0 0 5px hsl(var(--primary) / 0.05);
+            filter: drop-shadow(0 0 1px hsl(var(--primary) / 0.05));
         }
         50% {
-            text-shadow: 0 0 10px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.5), 0 0 30px hsl(var(--primary) / 0.3);
-            filter: drop-shadow(0 0 5px hsl(var(--primary) / 0.7));
+            text-shadow: 0 0 10px hsl(var(--primary) / 0.1);
+            filter: drop-shadow(0 0 2px hsl(var(--primary) / 0.1));
         }
     }
 
