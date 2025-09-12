@@ -37,43 +37,52 @@ export default function Home() {
         {/* Hero Section */}
         <section className="bg-white py-10 md:py-12">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="relative flex justify-center items-center">
-              
-              {/* Stars top-left */}
-              <div
-                className="absolute -top-12 -left-12 w-36 h-36 bg-no-repeat opacity-50"
-                style={{ backgroundImage: "url('/stars.svg')" }}
-              />
-              
-              {/* Arrow bottom-right */}
-              <svg width="100" height="100" className="absolute -bottom-16 -right-12 text-gray-800 opacity-30 transform scale-x-[-1] rotate-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 5v14" />
-                <path d="m19 12-7 7-7-7" />
-              </svg>
-              
-              <div className="relative p-4 bg-white transform -rotate-3" style={{boxShadow: '8px 8px 0px rgba(0,0,0,0.1)'}}>
-                <Image
-                    src={heroImage.imageUrl}
-                    alt={heroImage.description}
-                    width={800}
-                    height={1000}
-                    className="object-cover w-full h-auto max-h-[70vh]"
-                    data-ai-hint={heroImage.imageHint}
-                    priority
-                  />
-                <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center p-8">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white font-headline text-glow">
+            <div className="relative flex justify-center items-center h-[70vh] w-full">
+              {/* Background Image */}
+              <Image
+                  src={heroImage.imageUrl}
+                  alt={heroImage.description}
+                  fill
+                  className="object-cover"
+                  data-ai-hint={heroImage.imageHint}
+                  priority
+                />
+              <div className="absolute inset-0 bg-background/30 backdrop-blur-sm" />
+
+              {/* Foreground Content Collage */}
+              <div className="absolute inset-0">
+                  {/* Main Title */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                    <h1 className="text-5xl md:text-7xl font-bold text-white font-headline text-glow">
                         Discover Your Next Passion
                     </h1>
-                    <p className="mt-4 text-lg text-gray-200 max-w-md">
+                    <p className="mt-4 text-xl text-gray-200 max-w-md mx-auto">
                         Connect with fellow hobbyists, join events, and explore a world of creativity.
                     </p>
-                    <Button size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground animate-button-bounce" asChild>
+                  </div>
+                  
+                  {/* Top Left decorative text */}
+                  <div className="absolute top-10 left-10 bg-gray-800 bg-opacity-70 p-4 border border-gray-500 rounded font-code">
+                    <p className="text-white">DEPRIVING YOU</p>
+                    <p className="text-white">DONT YOU FEEL</p>
+                    <p className="text-white">ITS GOIN BAD</p>
+                    <p className="text-white">FAKE SMILE</p>
+                  </div>
+
+                   {/* Bottom Right "Join" Button */}
+                  <div className="absolute bottom-10 right-10 bg-white p-3 border-2 border-gray-400 rounded-md shadow-2xl">
+                    <p className="font-bold mb-2">Ready to Dive In?</p>
+                    <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
                         <Link href="/signup">
                         Join Now <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                     </Button>
-                </div>
+                  </div>
+                  
+                  {/* Bottom Left decorative text */}
+                  <div className="absolute bottom-10 left-10 bg-pink-500 text-white p-3 font-bold text-lg border-2 border-pink-300 transform -rotate-6">
+                    SAY YES TO EPIC LIFE!!! It's FREE!
+                  </div>
               </div>
             </div>
           </div>
