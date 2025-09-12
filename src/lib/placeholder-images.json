@@ -3,9 +3,9 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "A tranquil image of a moon over water, with stars shining.",
-      "imageUrl": "https://picsum.photos/seed/moon-water/800/1000",
-      "imageHint": "moon water"
+      "description": "An abstract, colorful explosion of light in space, resembling a supernova.",
+      "imageUrl": "https://picsum.photos/seed/supernova/800/1000",
+      "imageHint": "abstract supernova"
     },
     {
       "id": "hobby-communities",
