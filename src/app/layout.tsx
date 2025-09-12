@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'HobbySphere',
+  title: 'BondOverHobbies',
   description: 'Your AI-powered community for hobbyists.',
   keywords: ['hobbies', 'community', 'AI', 'social', 'events', 'creators'],
 };

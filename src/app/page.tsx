@@ -76,7 +76,7 @@ export default function Home() {
 
         <section className="bg-red-600 text-white">
            <div className="container mx-auto px-4 md:px-6 py-12">
-              <h2 className="text-4xl font-bold text-center mb-8 font-headline">HobbySphere</h2>
+              <h2 className="text-4xl font-bold text-center mb-8 font-headline">BondOverHobbies</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {heroFeatures.map((feature, index) => (
                   <div key={index} className="bg-pink-100/90 text-red-900 p-6 rounded-lg flex items-center gap-4 shadow-lg">

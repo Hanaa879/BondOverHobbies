@@ -18,7 +18,7 @@ export function Header() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Sprout className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block font-headline">
-              HobbySphere
+              BondOverHobbies
             </span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
@@ -49,7 +49,7 @@ export function Header() {
               <SheetContent side="left" className="pr-0">
                 <Link href="/" className="mr-6 flex items-center space-x-2">
                   <Sprout className="h-6 w-6 text-primary" />
-                  <span className="font-bold font-headline">HobbySphere</span>
+                  <span className="font-bold font-headline">BondOverHobbies</span>
                 </Link>
                 <div className="flex flex-col space-y-3 pt-6">
                   {navLinks.map((link) => (
