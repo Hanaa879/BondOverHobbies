@@ -53,7 +53,7 @@ export function Header() {
           </Link>
           <nav className="flex items-center gap-6 text-sm">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 transition-colors hover:text-foreground text-foreground/80 outline-none">
+              <DropdownMenuTrigger className="flex items-center gap-1 font-semibold transition-colors hover:text-foreground text-foreground outline-none">
                 Hobbies <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -69,7 +69,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition-colors hover:text-foreground text-foreground/80"
+                className="font-semibold transition-colors hover:text-foreground text-foreground"
               >
                 {link.label}
               </Link>
