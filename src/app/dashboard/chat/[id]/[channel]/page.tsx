@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/components/layout/header';
@@ -11,24 +11,28 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Sparkles, Calendar, MapPin, Users, Hash, MessageCircle, Paperclip, X } from 'lucide-react';
+import { Send, Sparkles, Calendar, MapPin, Users, Hash, MessageCircle, Paperclip, X, PlusCircle } from 'lucide-react';
 import { aiChatAssistant } from '@/ai/flows/ai-chat-assistant';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 
 // Mock data
-const communities = {
+const communities: Record<string, { name: string; avatar: string; interests: string; channels: string[] }> = {
   '1': { name: 'Photography Club', avatar: 'https://picsum.photos/seed/p-club/100/100', interests: 'portrait photography, landscape shots', channels: ['general', 'portraits', 'landscapes'] },
   '2': { name: 'Weekend Hikers', avatar: 'https://picsum.photos/seed/hikers/100/100', interests: 'long trails, mountain views', channels: ['general', 'trail-talk', 'gear'] },
   '3': { name: 'Creative Cooks', avatar: 'https://picsum.photos/seed/cooks/100/100', interests: 'baking, italian cuisine', channels: ['general', 'baking', 'recipes'] },
   '4': { name: 'Running Club', avatar: 'https://picsum.photos/seed/running/100/100', interests: 'marathons, trail running', channels: ['general', 'race-day', 'training-plans', 'gear-talk'] },
   '5': { name: 'Bookworms Unite', avatar: 'https://picsum.photos/seed/books/100/100', interests: 'fantasy novels, classic literature', channels: ['general', 'fantasy', 'classics-corner'] },
+  'creative-arts-crafts': { name: 'Creative Arts & Crafts', avatar: 'https://picsum.photos/seed/arts/100/100', interests: 'painting, drawing, sculpting', channels: ['general', 'painting', 'sketchbook'] },
 };
 
-const initialMessages = {
+const initialMessages: Record<string, Record<string, any[]>> = {
   '1': {
     'general': [
         { sender: 'Alice', message: 'That shot is amazing!', avatar: 'https://picsum.photos/seed/alice/100/100' },
@@ -59,7 +63,7 @@ const initialMessages = {
   },
 };
 
-const communityEvents = {
+const communityEvents: Record<string, any[]> = {
     '4': [
         {
             id: 1,
@@ -91,16 +95,26 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
   const communityId = params.id as keyof typeof communities;
   const channelId = params.channel as string;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
-  const community = communities[communityId] || { name: 'Unknown Community', avatar: '', interests: '', channels: ['general'] };
-  
+  if (!communities[communityId]) {
+      communities[communityId] = { name: 'Unknown Community', avatar: `https://picsum.photos/seed/${communityId}/100/100`, interests: 'General interests', channels: ['general'] };
+  }
+  if (!initialMessages[communityId]) {
+    initialMessages[communityId] = {};
+  }
+
+
+  const [community, setCommunity] = useState(communities[communityId]);
   const [messages, setMessages] = useState(
-    (initialMessages[communityId] as any)?.[channelId] || []
+    initialMessages[communityId]?.[channelId] || []
   );
   
   const [newMessage, setNewMessage] = useState('');
   const [attachment, setAttachment] = useState<Attachment | null>(null);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
+  const [newChannelName, setNewChannelName] = useState("");
+  const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
   const { toast } = useToast();
   const events = communityEvents[communityId] || [];
 
@@ -115,10 +129,10 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
       };
       setMessages([...messages, newMsgObject]);
 
-      // This is where you'd also update the main state/DB
-      if ((initialMessages as any)?.[communityId]?.[channelId]) {
-         (initialMessages as any)[communityId][channelId].push(newMsgObject);
+      if (!initialMessages[communityId][channelId]) {
+         initialMessages[communityId][channelId] = [];
       }
+      initialMessages[communityId][channelId].push(newMsgObject);
       
       setNewMessage('');
       setAttachment(null);
@@ -159,17 +173,45 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
     }
   };
   
-    // Effect to update messages when channel changes
-  useState(() => {
-    setMessages((initialMessages as any)?.[communityId]?.[channelId] || []);
-  });
+  const handleCreateChannel = () => {
+    if (newChannelName.trim()) {
+        const slug = newChannelName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        if (!community.channels.includes(slug)) {
+            const updatedCommunity = {
+                ...community,
+                channels: [...community.channels, slug]
+            };
+            setCommunity(updatedCommunity);
+            communities[communityId] = updatedCommunity;
+            initialMessages[communityId][slug] = [];
+            
+            toast({
+                title: "Channel created!",
+                description: `The #${slug} channel has been added.`
+            });
+            setNewChannelName("");
+            setIsCreateChannelOpen(false);
+            router.push(`/dashboard/chat/${communityId}/${slug}`);
+        } else {
+             toast({
+                variant: "destructive",
+                title: "Channel exists",
+                description: `A channel named #${slug} already exists.`
+            });
+        }
+    }
+  }
+
+  useEffect(() => {
+    setMessages(initialMessages[communityId]?.[channelId] || []);
+  }, [channelId, communityId]);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow flex flex-col md:flex-row">
         {/* Sidebar for Channels */}
-        <aside className="w-full md:w-64 bg-muted/50 border-r p-4 space-y-4">
+        <aside className="w-full md:w-64 bg-muted/50 border-r p-4 flex flex-col">
             <div className="flex items-center gap-3">
                  <Avatar>
                   <AvatarImage src={community.avatar} alt={community.name} />
@@ -177,8 +219,42 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
               </Avatar>
               <h1 className="text-xl font-bold">{community.name}</h1>
             </div>
-            <div className="space-y-2">
-                <h2 className="text-sm font-semibold text-muted-foreground px-2">TEXT CHANNELS</h2>
+             <div className="mt-4 space-y-2 flex-grow">
+                <div className="flex justify-between items-center px-2">
+                    <h2 className="text-sm font-semibold text-muted-foreground">TEXT CHANNELS</h2>
+                     <Dialog open={isCreateChannelOpen} onOpenChange={setIsCreateChannelOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-6 w-6">
+                                <PlusCircle className="h-4 w-4" />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Create a new channel</DialogTitle>
+                                <DialogDescription>
+                                    Channels are for discussing specific topics within your community.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="channel-name" className="text-right">
+                                        Name
+                                    </Label>
+                                    <Input 
+                                        id="channel-name" 
+                                        value={newChannelName}
+                                        onChange={(e) => setNewChannelName(e.target.value)}
+                                        placeholder="e.g., introductions"
+                                        className="col-span-3" 
+                                    />
+                                </div>
+                            </div>
+                             <DialogFooter>
+                                <Button type="button" onClick={handleCreateChannel}>Create Channel</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
                 {community.channels.map(channel => (
                     <Link
                         key={channel}
@@ -316,7 +392,7 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
                                             <Users className="mr-2 h-4 w-4" />
                                             <span>{event.attendees} attendees</span>
                                         </div>
-                                    </CardContent>
+ax                                    </CardContent>
                                 </Card>
                             ))
                         ) : (
@@ -334,5 +410,3 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
     </div>
   );
 }
-
-    

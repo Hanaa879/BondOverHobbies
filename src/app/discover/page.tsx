@@ -49,7 +49,7 @@ export default function DiscoverPage() {
   const handleJoinCommunity = (hobby: string) => {
     // This is a mock implementation. In a real app, you'd have a more robust system
     // for creating/finding community IDs.
-    const communityId = hobby.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const communityId = hobby.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     toast({
         title: `Joined ${hobby}!`,
         description: `You are now a member of the ${hobby} community.`,
