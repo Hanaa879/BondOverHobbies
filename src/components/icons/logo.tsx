@@ -15,12 +15,38 @@ export function Logo({ className, ...props }: React.ComponentProps<"svg">) {
       {...props}
     >
       <title>BondOverHobbies Logo</title>
-      <path d="M19.33 6.33a2.5 2.5 0 0 0-3.66-3.66l-12 12a2.5 2.5 0 0 0 3.66 3.66l12-12z" />
-      <path d="M13.5 1.5l-4 4" />
-      <path d="M19.5 7.5l-4 4" />
-      <path d="m4.63 14.2-.07-.07a2.5 2.5 0 1 0-3.46 3.53" />
-      <path d="m2.1 18.9 1.4-1.4" />
-      <path d="m1.4 17.5 1.4 1.4" />
+      <g transform="translate(12, 12)">
+        {/* Pin 1 */}
+        <g transform="rotate(0) translate(0, -3.5)">
+          <path d="M0,3.5 L0,1.5" />
+          <path d="M-0.5, -2 A 1 1 0 0 1 0.5 -2" />
+          <path d="M0.5,-2 L1.5,-2 A 1 1 0 0 1 1.5, -4 L-1.5, -4 A 1 1 0 0 1 -1.5, -2 L-0.5,-2" />
+        </g>
+        {/* Pin 2 */}
+        <g transform="rotate(72) translate(0, -3.5)">
+          <path d="M0,3.5 L0,1.5" />
+          <path d="M-0.5, -2 A 1 1 0 0 1 0.5 -2" />
+          <path d="M0.5,-2 L1.5,-2 A 1 1 0 0 1 1.5, -4 L-1.5, -4 A 1 1 0 0 1 -1.5, -2 L-0.5,-2" />
+        </g>
+        {/* Pin 3 */}
+        <g transform="rotate(144) translate(0, -3.5)">
+          <path d="M0,3.5 L0,1.5" />
+          <path d="M-0.5, -2 A 1 1 0 0 1 0.5 -2" />
+          <path d="M0.5,-2 L1.5,-2 A 1 1 0 0 1 1.5, -4 L-1.5, -4 A 1 1 0 0 1 -1.5, -2 L-0.5,-2" />
+        </g>
+        {/* Pin 4 */}
+        <g transform="rotate(216) translate(0, -3.5)">
+          <path d="M0,3.5 L0,1.5" />
+          <path d="M-0.5, -2 A 1 1 0 0 1 0.5 -2" />
+          <path d="M0.5,-2 L1.5,-2 A 1 1 0 0 1 1.5, -4 L-1.5, -4 A 1 1 0 0 1 -1.5, -2 L-0.5,-2" />
+        </g>
+        {/* Pin 5 */}
+        <g transform="rotate(288) translate(0, -3.5)">
+          <path d="M0,3.5 L0,1.5" />
+          <path d="M-0.5, -2 A 1 1 0 0 1 0.5 -2" />
+          <path d="M0.5,-2 L1.5,-2 A 1 1 0 0 1 1.5, -4 L-1.5, -4 A 1 1 0 0 1 -1.5, -2 L-0.5,-2" />
+        </g>
+      </g>
     </svg>
   );
 }
