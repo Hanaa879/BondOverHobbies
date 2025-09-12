@@ -84,12 +84,12 @@
     
     @keyframes pulsating-glow {
         0%, 100% {
-            text-shadow: 0 0 6px hsl(var(--primary) / 0.6), 0 0 12px hsl(var(--primary) / 0.4), 0 0 18px hsl(var(--primary) / 0.2);
-            filter: drop-shadow(0 0 3px hsl(var(--primary) / 0.6));
+            text-shadow: 0 0 5px hsl(var(--primary) / 0.5), 0 0 10px hsl(var(--primary) / 0.3), 0 0 15px hsl(var(--primary) / 0.1);
+            filter: drop-shadow(0 0 2px hsl(var(--primary) / 0.5));
         }
         50% {
-            text-shadow: 0 0 12px hsl(var(--primary) / 0.8), 0 0 24px hsl(var(--primary) / 0.6), 0 0 36px hsl(var(--primary) / 0.4);
-            filter: drop-shadow(0 0 6px hsl(var(--primary) / 0.8));
+            text-shadow: 0 0 10px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.5), 0 0 30px hsl(var(--primary) / 0.3);
+            filter: drop-shadow(0 0 5px hsl(var(--primary) / 0.7));
         }
     }
 
