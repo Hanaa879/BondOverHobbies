@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "A group of friends having fun together, representing community and hobbies.",
+      "imageUrl": "https://picsum.photos/seed/hobbies/1920/1080",
+      "imageHint": "friends fun"
+    },
+    {
+      "id": "hobby-communities",
+      "description": "People gathered and talking in a community setting.",
+      "imageUrl": "https://picsum.photos/seed/community/600/400",
+      "imageHint": "people talking"
+    },
+    {
+      "id": "local-events",
+      "description": "A crowd at a local event or concert.",
+      "imageUrl": "https://picsum.photos/seed/events/600/400",
+      "imageHint": "concert crowd"
+    },
+    {
+      "id": "creator-showcase",
+      "description": "Art pieces displayed in a gallery.",
+      "imageUrl": "https://picsum.photos/seed/creator/600/400",
+      "imageHint": "art gallery"
+    }
+  ]
 }
