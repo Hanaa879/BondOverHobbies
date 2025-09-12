@@ -46,7 +46,7 @@ export default function Home() {
               
               <div className="relative p-4 bg-white transform -rotate-3" style={{boxShadow: '8px 8px 0px rgba(0,0,0,0.1)'}}>
                 <Image
-                    src="https://storage.googleapis.com/aifirebase-images/strawberry-art.png"
+                    src="https://picsum.photos/seed/strawberry-art/800/1000"
                     alt="An artistic image of strawberries floating in a dark, cosmic liquid with colorful swirls."
                     width={800}
                     height={1000}
