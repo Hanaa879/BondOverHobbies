@@ -393,7 +393,7 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
                                             <Users className="mr-2 h-4 w-4" />
                                             <span>{event.attendees} attendees</span>
                                         </div>
-ax                                    </CardContent>
+                                    </CardContent>
                                 </Card>
                             ))
                         ) : (
