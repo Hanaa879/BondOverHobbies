@@ -101,15 +101,23 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
       const name = communityId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
       communities[communityId] = { name: name, avatar: `https://picsum.photos/seed/${communityId}/100/100`, interests: 'General interests', channels: ['general'], backgroundUrl: `https://picsum.photos/seed/${communityId}-bg/1200/800` };
   }
-  if (!initialMessages[communityId]) {
-    initialMessages[communityId] = {};
-  }
+  
+  const [allMessages, setAllMessages] = useState(() => {
+    // Deep copy to prevent mutation of the original mock data
+    if (typeof window !== 'undefined') {
+        const storedMessages = localStorage.getItem('chatMessages');
+        if (storedMessages) {
+            return JSON.parse(storedMessages);
+        }
+    }
+    return JSON.parse(JSON.stringify(initialMessages));
+  });
 
+  useEffect(() => {
+    localStorage.setItem('chatMessages', JSON.stringify(allMessages));
+  }, [allMessages]);
 
   const [community, setCommunity] = useState(communities[communityId]);
-  const [messages, setMessages] = useState(
-    initialMessages[communityId]?.[channelId] || []
-  );
   
   const [newMessage, setNewMessage] = useState('');
   const [attachment, setAttachment] = useState<Attachment | null>(null);
@@ -118,6 +126,8 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
   const { toast } = useToast();
   const events = communityEvents[communityId] || [];
+
+  const messages = allMessages[communityId]?.[channelId] || [];
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,12 +138,18 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
         avatar: 'https://picsum.photos/seed/user-avatar/100/100',
         attachment: attachment
       };
-      setMessages([...messages, newMsgObject]);
 
-      if (!initialMessages[communityId][channelId]) {
-         initialMessages[communityId][channelId] = [];
-      }
-      initialMessages[communityId][channelId].push(newMsgObject);
+      setAllMessages((prevAllMessages: any) => {
+        const newAllMessages = JSON.parse(JSON.stringify(prevAllMessages));
+        if (!newAllMessages[communityId]) {
+          newAllMessages[communityId] = {};
+        }
+        if (!newAllMessages[communityId][channelId]) {
+           newAllMessages[communityId][channelId] = [];
+        }
+        newAllMessages[communityId][channelId].push(newMsgObject);
+        return newAllMessages;
+      });
       
       setNewMessage('');
       setAttachment(null);
@@ -159,7 +175,7 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
       const result = await aiChatAssistant({
         topic: `${community.name} - #${channelId}`,
         interests: community.interests,
-        messageHistory: messages.map(m => `${m.sender}: ${m.message}`),
+        messageHistory: messages.map((m: any) => `${m.sender}: ${m.message}`),
       });
       setNewMessage(result.prompt);
     } catch (error) {
@@ -184,8 +200,14 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
             };
             setCommunity(updatedCommunity);
             communities[communityId] = updatedCommunity;
-            initialMessages[communityId][slug] = [];
             
+            setAllMessages((prevAllMessages: any) => {
+                const newAllMessages = {...prevAllMessages};
+                if (!newAllMessages[communityId]) newAllMessages[communityId] = {};
+                newAllMessages[communityId][slug] = [];
+                return newAllMessages;
+            });
+
             toast({
                 title: "Channel created!",
                 description: `The #${slug} channel has been added.`
@@ -202,10 +224,6 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
         }
     }
   }
-
-  useEffect(() => {
-    setMessages(initialMessages[communityId]?.[channelId] || []);
-  }, [channelId, communityId]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -273,7 +291,7 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
         </aside>
 
         {/* Main Content Area */}
-        <div className="flex-grow flex flex-col relative h-[calc(100vh-var(--header-height))]">
+        <div className="flex-grow flex flex-col relative h-[calc(100vh-var(--header-height,60px))]">
           <div 
               className="absolute inset-0 bg-cover bg-center z-0" 
               style={{ backgroundImage: `url(${community.backgroundUrl})` }}
@@ -286,14 +304,14 @@ export default function ChatPage({ params }: { params: { id: string; channel: st
                         <TabsTrigger value="chat"><MessageCircle className="mr-2 h-4 w-4" />Chat</TabsTrigger>
                         <TabsTrigger value="events"><Calendar className="mr-2 h-4 w-4" />Events</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="chat" className="flex flex-col flex-grow">
+                    <TabsContent value="chat" className="flex flex-col flex-grow h-[calc(100vh-var(--header-height,60px)-100px)]">
                         <div className='border-b p-4 border-white/10'>
                             <h2 className="text-2xl font-bold flex items-center"><Hash className="h-6 w-6 mr-2 text-muted-foreground"/>{channelId}</h2>
                             <p className="text-sm text-muted-foreground">This is the start of the #{channelId} channel.</p>
                         </div>
                         <ScrollArea className="flex-grow mb-4 pr-4">
                             <div className="space-y-6 p-6">
-                            {messages.map((msg, index) => (
+                            {messages.map((msg: any, index: number) => (
                                 <div key={index} className={`flex items-start gap-4 ${msg.sender === 'You' ? 'justify-end' : ''}`}>
                                 {msg.sender !== 'You' && (
                                     <Avatar className="h-10 w-10">
