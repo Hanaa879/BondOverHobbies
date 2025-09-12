@@ -8,16 +8,17 @@ export function Logo({ className, ...props }: React.ComponentProps<"svg">) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={cn("h-6 w-6 text-primary", className)}
       {...props}
     >
       <title>BondOverHobbies Logo</title>
-      <path d="M12 2l2.94 6.06L22 9.27l-5 4.87 1.18 6.86L12 17.67l-6.18 3.33L7 14.14l-5-4.87 7.06-1.21L12 2z" />
-      <path d="M17.5 19l-3-3" />
-      <path d="M6.5 5l3 3" />
+      <path d="M19.33 6.33a2.5 2.5 0 0 0-3.66-3.66l-12 12a2.5 2.5 0 0 0 3.66 3.66l12-12z" />
+      <path d="M13.5 1.5l-4 4" />
+      <path d="M19.5 7.5l-4 4" />
+      <path d="M4.67 17.67a2.5 2.5 0 1 0-3.34-3.34" />
     </svg>
   );
 }
