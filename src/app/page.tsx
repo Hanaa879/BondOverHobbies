@@ -24,6 +24,12 @@ export default function Home() {
     }
   ];
 
+  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background') || {
+      imageUrl: "https://picsum.photos/seed/default-hero/800/1000",
+      description: "Default placeholder image",
+      imageHint: "abstract art"
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -47,12 +53,13 @@ export default function Home() {
               
               <div className="relative p-4 bg-white transform -rotate-3" style={{boxShadow: '8px 8px 0px rgba(0,0,0,0.1)'}}>
                 <Image
-                    src="https://picsum.photos/seed/strawberry-art/800/1000"
-                    alt="An artistic image of strawberries floating in a dark, cosmic liquid with colorful swirls."
+                    src={heroImage.imageUrl}
+                    alt={heroImage.description}
                     width={800}
                     height={1000}
                     className="object-cover w-full h-auto"
-                    data-ai-hint="strawberries space"
+                    data-ai-hint={heroImage.imageHint}
+                    priority
                   />
                 <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center p-8">
                     <h1 className="text-4xl md:text-5xl font-bold text-white font-headline text-glow">
