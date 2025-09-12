@@ -23,8 +23,8 @@ export default function DiscoverPage() {
     if (!interests.trim()) {
       toast({
         variant: "destructive",
-        title: "Interests needed",
-        description: "Please tell us what you're interested in.",
+        title: "Share Your Interests",
+        description: "Please tell us what sparks your curiosity.",
       });
       return;
     }
@@ -39,7 +39,7 @@ export default function DiscoverPage() {
       toast({
         variant: "destructive",
         title: "Oh no! Something went wrong.",
-        description: "The AI couldn't generate recommendations right now.",
+        description: "Our AI is stargazing right now. Please try again in a moment.",
       });
     } finally {
       setIsLoading(false);
@@ -51,8 +51,8 @@ export default function DiscoverPage() {
     // for creating/finding community IDs.
     const communityId = hobby.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     toast({
-        title: `Joined ${hobby}!`,
-        description: `You are now a member of the ${hobby} community.`,
+        title: `Welcome to ${hobby}!`,
+        description: `You've successfully joined the ${hobby} community.`,
     });
     router.push(`/dashboard/chat/${communityId}/general`);
   };
@@ -63,16 +63,16 @@ export default function DiscoverPage() {
       <main className="flex-grow container mx-auto px-4 md:px-6 py-8">
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold">Discover New Hobbies</CardTitle>
+            <CardTitle className="text-3xl font-bold">Discover Your Next Passion</CardTitle>
             <CardDescription>
-              Let our AI help you find your next passion. Just tell us what you like!
+              Let our AI guide help you find a new universe of interests. Just tell us what you love!
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <p className="font-medium">What are your interests?</p>
+              <p className="font-medium">What sparks your curiosity?</p>
               <Input
-                placeholder="e.g., being creative, outdoors, technology, fantasy books"
+                placeholder="e.g., creative writing, stargazing, urban gardening"
                 value={interests}
                 onChange={(e) => setInterests(e.target.value)}
                 onKeyDown={(e) => {
@@ -81,22 +81,22 @@ export default function DiscoverPage() {
                   }
                 }}
               />
-               <p className="text-xs text-muted-foreground">Separate different interests with a comma.</p>
+               <p className="text-xs text-muted-foreground">Separate your interests with a comma.</p>
             </div>
             <Button onClick={handleGetRecommendations} disabled={isLoading} className="w-full">
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Thinking...
+                  Scanning the Cosmos...
                 </>
               ) : (
-                'Get Recommendations'
+                'Find My Hobbies'
               )}
             </Button>
             
             {recommendations.length > 0 && (
               <div className="space-y-4 pt-4 border-t">
-                <h3 className="font-semibold text-lg">Here are some ideas for you:</h3>
+                <h3 className="font-semibold text-lg">A new constellation of hobbies awaits:</h3 >
                 <ul className="space-y-2">
                   {recommendations.map((hobby, index) => (
                     <li key={index} className="flex items-center justify-between p-2 rounded-md hover:bg-muted">

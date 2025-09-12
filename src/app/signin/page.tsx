@@ -49,8 +49,8 @@ export default function SignInPage() {
     // In a real app, you would send this to your authentication server.
     console.log(values);
     toast({
-      title: "Signed In!",
-      description: "You've successfully signed in.",
+      title: "Welcome Back!",
+      description: "You've successfully signed in to your universe of hobbies.",
     });
     router.push("/dashboard");
   }
@@ -63,10 +63,10 @@ export default function SignInPage() {
           <div className="text-center">
             <Logo className="mx-auto h-12 w-12 text-primary" />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">
-              Sign in to your account
+              Sign in to Your Universe
             </h1>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              to continue your hobby journey with BondOverHobbies.
+              to continue your journey with BondOverHobbies.
             </p>
           </div>
           <Form {...form}>
@@ -125,7 +125,7 @@ export default function SignInPage() {
               href="/signup"
               className="font-medium text-primary hover:underline"
             >
-              Sign Up
+              Join the Community
             </Link>
           </p>
         </div>

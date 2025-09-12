@@ -36,7 +36,7 @@ export default function AddHobbyPage() {
     console.log("New Hobby Submitted:", values);
     toast({
       title: "Hobby Added!",
-      description: `You've successfully added "${values.hobbyName}" to your hobbies.`,
+      description: `You've successfully added "${values.hobbyName}" to your constellation of hobbies.`,
     });
     // In a real app, you'd save this to the user's profile and likely redirect
     // to the dashboard or the new hobby's community page.
@@ -51,7 +51,7 @@ export default function AddHobbyPage() {
           <CardHeader>
             <CardTitle className="text-3xl">Add a New Hobby</CardTitle>
             <CardDescription>
-                Tell us about a hobby you enjoy. This will help us connect you with the right communities.
+                Tell us about a passion you enjoy. This helps us connect you with the right constellations of people.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -77,7 +77,7 @@ export default function AddHobbyPage() {
                             <FormItem>
                                 <FormLabel>Description (Optional)</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder="Tell us a bit about why you love this hobby." {...field} />
+                                    <Textarea placeholder="Share a little about why you love this hobby and what it means for your well-being." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

@@ -7,8 +7,8 @@ export default function EventsPage() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow container mx-auto px-4 md:px-6 py-8">
-        <h1 className="text-4xl font-bold mb-4">Events</h1>
-        <p>This is where users can find local and online events for their hobbies.</p>
+        <h1 className="text-4xl font-bold mb-4">Community Events</h1>
+        <p>Discover local and online events to connect with your constellation of hobbyists.</p>
       </main>
       <Footer />
     </div>

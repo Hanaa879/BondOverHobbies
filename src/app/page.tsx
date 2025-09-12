@@ -11,15 +11,15 @@ export default function Home() {
   const heroFeatures = [
     {
       icon: <MessageSquare className="w-8 h-8 text-primary" />,
-      text: "You can talk to people interested in the same stuff."
+      text: "Connect with kindred spirits who share your enthusiasm in vibrant communities."
     },
     {
       icon: <ShoppingBag className="w-8 h-8 text-primary" />,
-      text: "You can buy from your favorite hobbyist."
+      text: "Discover and support unique creations from talented artisans in our creator marketplace."
     },
     {
       icon: <Smile className="w-8 h-8 text-primary" />,
-      text: "No more loneliness or boredom, only discovering new fun and events."
+      text: "Transform loneliness into connection. A universe of new friends and experiences awaits."
     }
   ];
 
@@ -37,10 +37,10 @@ export default function Home() {
               {/* Foreground Content */}
               <div className="relative text-center">
                 <h1 className="text-5xl md:text-7xl font-bold text-white font-headline text-glow">
-                    Discover Your Next Passion
+                    Ignite Your Next Passion
                 </h1>
                 <p className="mt-4 text-xl text-gray-200 max-w-xl mx-auto">
-                    Connect with fellow hobbyists, join events, and explore a world of creativity.
+                    Forge connections with fellow enthusiasts, embark on new adventures, and unlock a universe of creativity.
                 </p>
               </div>
             </div>
@@ -50,9 +50,9 @@ export default function Home() {
         {/* Call to Action Section */}
         <section className="pb-16 md:pb-24">
           <div className="container mx-auto px-4 md:px-6 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline">Ready to Dive In?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold font-headline">Ready to Find Your Constellation?</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                Join our community today and start connecting with people who share your passion.
+                Join our vibrant community and start forging bonds with people who share your passions. Your journey to wellness and connection starts here.
               </p>
               <Button size="lg" className="mt-8" asChild>
                 <Link href="/signup">

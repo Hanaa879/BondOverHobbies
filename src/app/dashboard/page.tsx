@@ -102,7 +102,7 @@ export default function DashboardPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
               type="search"
-              placeholder="Search for hobbies, events, or people..."
+              placeholder="Search your universe of hobbies, events, and people..."
               className="w-full pl-10 pr-4 py-2 text-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -115,9 +115,9 @@ export default function DashboardPage() {
               {showDiscover && (
                  <Card>
                   <CardHeader>
-                    <CardTitle>Discover Communities</CardTitle>
+                    <CardTitle>Discover New Communities</CardTitle>
                     <CardDescription>
-                      Join communities that match your search.
+                      Find and join communities that match your search.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                 <CardHeader>
                   <CardTitle>Recent Conversations</CardTitle>
                   <CardDescription>
-                    Jump back into your recent chats.
+                    Jump back into your recent chats and connections.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -171,7 +171,7 @@ export default function DashboardPage() {
                         </Link>
                       ))
                     ) : (
-                      <p className="text-center text-gray-500 dark:text-gray-400 py-4">No conversations found.</p>
+                      <p className="text-center text-gray-500 dark:text-gray-400 py-4">No conversations found. Time to start one!</p>
                     )}
                   </div>
                 </CardContent>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
                       <p className="text-center text-gray-500 dark:text-gray-400 py-4">No hobbies found for your search.</p>
                     ) : (
                     <div className="text-center text-gray-500 dark:text-gray-400 py-4">
-                      <p>You haven&apos;t added any hobbies yet.</p>
+                      <p>You haven't added any hobbies yet.</p>
                       <Button variant="link" className="mt-2" asChild>
                         <Link href="/discover">Find Hobbies</Link>
                       </Button>

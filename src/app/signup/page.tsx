@@ -53,8 +53,8 @@ export default function SignUpPage() {
     // In a real app, you would send this to your authentication server.
     console.log(values);
     toast({
-      title: "Account Created!",
-      description: "You've successfully signed up.",
+      title: "Welcome to the Community!",
+      description: "Your account has been created. Your journey begins now.",
       action: (
         <Button asChild variant="link" className="text-white">
           <Link href="/signin">Sign In</Link>
@@ -72,10 +72,10 @@ export default function SignUpPage() {
           <div className="text-center">
             <Logo className="mx-auto h-12 w-12 text-primary" />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">
-              Create your account
+              Join Your New Community
             </h1>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              to start your hobby journey with BondOverHobbies.
+              to begin your journey with BondOverHobbies.
             </p>
           </div>
           <Form {...form}>
@@ -142,7 +142,7 @@ export default function SignUpPage() {
             </form>
           </Form>
           <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            Already have an account?{" "}
+            Already part of our universe?{" "}
             <Link
               href="/signin"
               className="font-medium text-primary hover:underline"

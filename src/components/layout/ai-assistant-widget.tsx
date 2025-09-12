@@ -19,7 +19,7 @@ type Message = {
 export function AIAssistantWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'model', content: "Hi there! I'm Sparky. How can I help you feel more connected today?" }
+        { role: 'model', content: "Hi there! I'm Sparky, your friendly guide to well-being. How can I help you find your spark today?" }
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +46,7 @@ export function AIAssistantWidget() {
             toast({
                 variant: "destructive",
                 title: "Oh no! Something went wrong.",
-                description: "Sparky is taking a little break. Please try again later.",
+                description: "Sparky is taking a brief rest. Please try again in a moment.",
             });
         } finally {
             setIsLoading(false);
@@ -80,7 +80,7 @@ export function AIAssistantWidget() {
                             <Bot className="h-6 w-6" />
                             <h3 className="font-bold text-lg">Sparky</h3>
                         </div>
-                        <p className="text-sm text-primary-foreground/90 mt-1">Your friendly wellness guide</p>
+                        <p className="text-sm text-primary-foreground/90 mt-1">Your friendly wellness companion</p>
                     </header>
                     <ScrollArea className="flex-grow bg-background" ref={scrollAreaRef as any}>
                         <div className="p-4 space-y-4">
@@ -118,7 +118,7 @@ export function AIAssistantWidget() {
                             <Input
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Ask Sparky..."
+                                placeholder="Ask Sparky for advice..."
                                 className="flex-grow"
                                 disabled={isLoading}
                             />

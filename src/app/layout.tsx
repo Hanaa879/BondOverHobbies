@@ -6,8 +6,8 @@ import { AIAssistantWidget } from '@/components/layout/ai-assistant-widget';
 
 export const metadata: Metadata = {
   title: 'BondOverHobbies',
-  description: 'Your AI-powered community for hobbyists.',
-  keywords: ['hobbies', 'community', 'AI', 'social', 'events', 'creators'],
+  description: 'Your cosmic community for connection, creativity, and well-being.',
+  keywords: ['hobbies', 'community', 'AI', 'social', 'events', 'creators', 'mental health', 'wellness'],
 };
 
 export default function RootLayout({
