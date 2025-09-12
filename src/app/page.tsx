@@ -1,11 +1,10 @@
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight, MessageSquare, ShoppingBag, Smile } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { PixelatedStars } from '@/components/layout/pixelated-stars';
 
 export default function Home() {
 
@@ -24,12 +23,6 @@ export default function Home() {
     }
   ];
 
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-background') || {
-      imageUrl: "https://picsum.photos/seed/default-hero/800/1000",
-      description: "Default placeholder image",
-      imageHint: "abstract art"
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -38,16 +31,8 @@ export default function Home() {
         <section className="py-10 md:py-12">
           <div className="container mx-auto px-4 md:px-6">
             <div className="relative flex justify-center items-center h-[60vh] w-full rounded-lg overflow-hidden">
-              {/* Background Image */}
-              <Image
-                  src={heroImage.imageUrl}
-                  alt={heroImage.description}
-                  fill
-                  className="object-cover"
-                  data-ai-hint={heroImage.imageHint}
-                  priority
-                />
-              <div className="absolute inset-0 bg-background/30 backdrop-blur-sm" />
+              <PixelatedStars />
+              <div className="absolute inset-0 bg-background/30" />
 
               {/* Foreground Content */}
               <div className="relative text-center">
