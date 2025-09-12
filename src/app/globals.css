@@ -81,4 +81,19 @@
             opacity: 1;
         }
     }
+    
+    @keyframes pulsating-glow {
+        0%, 100% {
+            text-shadow: 0 0 6px hsl(var(--primary) / 0.6), 0 0 12px hsl(var(--primary) / 0.4), 0 0 18px hsl(var(--primary) / 0.2);
+            filter: drop-shadow(0 0 3px hsl(var(--primary) / 0.6));
+        }
+        50% {
+            text-shadow: 0 0 12px hsl(var(--primary) / 0.8), 0 0 24px hsl(var(--primary) / 0.6), 0 0 36px hsl(var(--primary) / 0.4);
+            filter: drop-shadow(0 0 6px hsl(var(--primary) / 0.8));
+        }
+    }
+
+    .pulsating-glow {
+      animation: pulsating-glow 4s infinite ease-in-out;
+    }
 }

@@ -10,15 +10,15 @@ export default function Home() {
 
   const heroFeatures = [
     {
-      icon: <MessageSquare className="w-8 h-8 text-primary" />,
+      icon: <MessageSquare className="w-8 h-8 text-primary pulsating-glow" />,
       text: "Connect with kindred spirits in vibrant communities that share your enthusiasm."
     },
     {
-      icon: <ShoppingBag className="w-8 h-8 text-primary" />,
+      icon: <ShoppingBag className="w-8 h-8 text-primary pulsating-glow" />,
       text: "Discover and champion unique creations from talented artisans in our creator showcase."
     },
     {
-      icon: <Smile className="w-8 h-8 text-primary" />,
+      icon: <Smile className="w-8 h-8 text-primary pulsating-glow" />,
       text: "Transform loneliness into belonging. A universe of new friends and fulfilling experiences awaits."
     }
   ];
@@ -36,10 +36,10 @@ export default function Home() {
 
               {/* Foreground Content */}
               <div className="relative text-center">
-                <h1 className="text-5xl md:text-7xl font-bold text-white font-headline text-glow">
+                <h1 className="text-5xl md:text-7xl font-bold text-white font-headline pulsating-glow">
                     Ignite Your Next Passion
                 </h1>
-                <p className="mt-4 text-xl text-gray-200 max-w-xl mx-auto">
+                <p className="mt-4 text-xl text-gray-200 max-w-xl mx-auto pulsating-glow">
                     Forge connections with fellow enthusiasts, embark on new adventures, and unlock a universe of creativity and well-being.
                 </p>
               </div>
@@ -50,11 +50,11 @@ export default function Home() {
         {/* Call to Action Section */}
         <section className="pb-16 md:pb-24">
           <div className="container mx-auto px-4 md:px-6 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline">Ready to Find Your Constellation?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold font-headline pulsating-glow">Ready to Find Your Constellation?</h2>
               <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
                 Join our vibrant cosmos and start forging bonds with people who share your passions. Your journey to wellness and connection starts here.
               </p>
-              <Button size="lg" className="mt-8" asChild>
+              <Button size="lg" className="mt-8 pulsating-glow" asChild>
                 <Link href="/signup">
                   Join Now <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -64,14 +64,14 @@ export default function Home() {
 
         <section className="bg-secondary text-secondary-foreground">
            <div className="container mx-auto px-4 md:px-6 py-12">
-              <h2 className="text-4xl font-bold text-center mb-8 font-headline">BondOverHobbies</h2>
+              <h2 className="text-4xl font-bold text-center mb-8 font-headline pulsating-glow">BondOverHobbies</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {heroFeatures.map((feature, index) => (
                   <div key={index} className="bg-background/20 text-foreground p-6 rounded-lg flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 shadow-lg">
                     <div className="flex-shrink-0 bg-primary/20 p-3 rounded-md">
                         {feature.icon}
                     </div>
-                    <p className="font-medium text-foreground">{feature.text}</p>
+                    <p className="font-medium text-foreground pulsating-glow">{feature.text}</p>
                   </div>
                 ))}
               </div>

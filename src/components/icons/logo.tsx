@@ -11,7 +11,7 @@ export function Logo({ className, ...props }: React.ComponentProps<"svg">) {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-6 w-6", className)}
+      className={cn("h-6 w-6 pulsating-glow", className)}
       {...props}
     >
         <title>BondOverHobbies Logo</title>
