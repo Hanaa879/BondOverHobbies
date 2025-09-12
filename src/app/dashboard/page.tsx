@@ -71,8 +71,8 @@ export default function DashboardPage() {
       setUserHobbies(prev => [...prev, community.name]);
     }
     
-    // Navigate to chat
-    router.push(`/dashboard/chat/${community.id}`);
+    // Navigate to chat's default channel
+    router.push(`/dashboard/chat/${community.id}/general`);
   };
 
   const filteredConversations = recentConversations.filter(
@@ -156,7 +156,7 @@ export default function DashboardPage() {
                   <div className="space-y-4">
                     {filteredConversations.length > 0 ? (
                       filteredConversations.map((convo) => (
-                        <Link href={`/dashboard/chat/${convo.id}`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                        <Link href={`/dashboard/chat/${convo.id}/general`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
                           <Avatar className="h-12 w-12 mr-4">
                             <AvatarImage src={convo.avatar} alt={convo.name} />
                             <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
