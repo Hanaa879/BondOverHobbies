@@ -19,6 +19,7 @@ import { Eye, EyeOff, Sprout } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import React from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -34,6 +35,7 @@ const formSchema = z.object({
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = React.useState(false);
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,10 +46,13 @@ export default function SignUpPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // For now, we'll just log the values.
+    // For now, we'll just log the values and show a toast.
     // In a real app, you would send this to your authentication server.
     console.log(values);
-    alert("Check the console to see the form data!");
+    toast({
+      title: "Account Created!",
+      description: "You've successfully signed up.",
+    });
   }
 
   return (
