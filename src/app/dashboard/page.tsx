@@ -59,7 +59,7 @@ export default function DashboardPage() {
                 <CardContent>
                   <div className="space-y-4">
                     {recentConversations.map((convo) => (
-                      <Link href="#" key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                      <Link href={`/dashboard/chat/${convo.id}`} key={convo.id} className="flex items-center p-2 -mx-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
                         <Avatar className="h-12 w-12 mr-4">
                           <AvatarImage src={convo.avatar} alt={convo.name} />
                           <AvatarFallback>{convo.name.charAt(0)}</AvatarFallback>
@@ -83,8 +83,10 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-lg font-medium">Your Hobbies</CardTitle>
-                  <Button variant="ghost" size="icon">
-                    <PlusCircle className="h-5 w-5 text-gray-400" />
+                  <Button variant="ghost" size="icon" asChild>
+                    <Link href="/hobbies/add">
+                      <PlusCircle className="h-5 w-5 text-gray-400" />
+                    </Link>
                   </Button>
                 </CardHeader>
                 <CardContent>
@@ -100,8 +102,8 @@ export default function DashboardPage() {
                   ) : (
                     <div className="text-center text-gray-500 dark:text-gray-400 py-4">
                       <p>You haven&apos;t added any hobbies yet.</p>
-                      <Button variant="link" className="mt-2">
-                        Find Hobbies
+                      <Button variant="link" className="mt-2" asChild>
+                        <Link href="/discover">Find Hobbies</Link>
                       </Button>
                     </div>
                   )}

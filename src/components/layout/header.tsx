@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -5,10 +6,10 @@ import { Menu, Sprout } from "lucide-react";
 
 export function Header() {
   const navLinks = [
-    { href: "#", label: "Hobbies" },
-    { href: "#", label: "Events" },
-    { href: "#", label: "Showcase" },
-    { href: "#", label: "Discover" },
+    { href: "/hobbies", label: "Hobbies" },
+    { href: "/events", label: "Events" },
+    { href: "/showcase", label: "Showcase" },
+    { href: "/discover", label: "Discover" },
   ];
 
   return (
