@@ -31,7 +31,6 @@ export async function mentalHealthAssistant(input: MentalHealthAssistantInput): 
 
 const prompt = ai.definePrompt({
   name: 'mentalHealthAssistantPrompt',
-  input: {schema: MentalHealthAssistantInputSchema},
   output: {schema: MentalHealthAssistantOutputSchema},
   system: `You are a friendly and supportive AI assistant named 'Sparky' for the BondOverHobbies app. Your goal is to help users with their mental well-being and to improve their communication skills.
 
