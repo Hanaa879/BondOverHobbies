@@ -12,11 +12,13 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
+const messageSchema = z.object({
+  role: z.enum(['user', 'model']),
+  content: z.string(),
+});
+
 const MentalHealthAssistantInputSchema = z.object({
-  history: z.array(z.object({
-    role: z.enum(['user', 'model']),
-    content: z.string(),
-  })).describe('A list of previous messages in the conversation.'),
+  history: z.array(messageSchema).describe('A list of previous messages in the conversation.'),
 });
 export type MentalHealthAssistantInput = z.infer<typeof MentalHealthAssistantInputSchema>;
 
@@ -31,7 +33,6 @@ export async function mentalHealthAssistant(input: MentalHealthAssistantInput): 
 
 const prompt = ai.definePrompt({
   name: 'mentalHealthAssistantPrompt',
-  input: {schema: MentalHealthAssistantInputSchema},
   output: {schema: MentalHealthAssistantOutputSchema},
   system: `You are a friendly and supportive AI assistant named 'Sparky' for the BondOverHobbies app. Your goal is to help users with their mental well-being and to improve their communication skills.
 
