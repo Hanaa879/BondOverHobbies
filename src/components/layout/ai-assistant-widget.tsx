@@ -38,7 +38,7 @@ export function AIAssistantWidget() {
 
         try {
             const result = await mentalHealthAssistant({
-                history: newMessages.map(m => ({ role: m.role, content: m.content })),
+                history: newMessages,
             });
             setMessages(prev => [...prev, { role: 'model', content: result.response }]);
         } catch (error) {
