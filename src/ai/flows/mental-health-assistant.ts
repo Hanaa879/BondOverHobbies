@@ -39,9 +39,6 @@ You are NOT a licensed therapist. If the user seems to be in serious distress, g
 
 Based on the conversation, provide a short, kind, and encouraging response. You can offer simple tips for managing loneliness, starting conversations, or dealing with social anxiety. Keep it positive and brief, but provide a complete and helpful thought.`,
   messages: '{{history}}',
-  input: {
-    schema: MentalHealthAssistantInputSchema,
-  },
 });
 
 const mentalHealthAssistantFlow = ai.defineFlow(
