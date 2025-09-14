@@ -37,9 +37,7 @@ export function AIAssistantWidget() {
         setIsLoading(true);
 
         try {
-            const result = await mentalHealthAssistant({
-                history: newMessages,
-            });
+            const result = await mentalHealthAssistant(newMessages);
             setMessages(prev => [...prev, { role: 'model', content: result.response }]);
         } catch (error) {
             console.error("AI Assistant Error:", error);

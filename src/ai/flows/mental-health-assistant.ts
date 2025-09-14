@@ -17,10 +17,7 @@ const messageSchema = z.object({
   content: z.string(),
 });
 
-const MentalHealthAssistantInputSchema = z.object({
-  history: z.array(messageSchema).describe('A list of previous messages in the conversation.'),
-});
-export type MentalHealthAssistantInput = z.infer<typeof MentalHealthAssistantInputSchema>;
+export type MentalHealthAssistantInput = z.infer<typeof messageSchema>[];
 
 const MentalHealthAssistantOutputSchema = z.object({
   response: z.string().describe('A supportive and helpful response from the assistant.'),
@@ -39,17 +36,17 @@ const prompt = ai.definePrompt({
 You are NOT a licensed therapist. If the user seems to be in serious distress, gently advise them to seek help from a qualified professional and provide a resource like the National Suicide Prevention Lifeline: 988.
 
 Based on the conversation, provide a short, kind, and encouraging response. You can offer simple tips for managing loneliness, starting conversations, or dealing with social anxiety. Keep it positive and brief, but provide a complete and helpful thought.`,
-  messages: '{{history}}',
+  messages: '{{messages}}',
 });
 
 const mentalHealthAssistantFlow = ai.defineFlow(
   {
     name: 'mentalHealthAssistantFlow',
-    inputSchema: MentalHealthAssistantInputSchema,
+    inputSchema: z.array(messageSchema),
     outputSchema: MentalHealthAssistantOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
+  async messages => {
+    const {output} = await prompt({ messages });
     return output!;
   }
 );
