@@ -13,7 +13,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const MentalHealthAssistantInputSchema = z.object({
-  messageHistory: z.array(z.object({
+  history: z.array(z.object({
     role: z.enum(['user', 'model']),
     content: z.string(),
   })).describe('A list of previous messages in the conversation.'),
@@ -38,7 +38,7 @@ const prompt = ai.definePrompt({
 You are NOT a licensed therapist. If the user seems to be in serious distress, gently advise them to seek help from a qualified professional and provide a resource like the National Suicide Prevention Lifeline: 988.
 
 Based on the conversation, provide a short, kind, and encouraging response. You can offer simple tips for managing loneliness, starting conversations, or dealing with social anxiety. Keep it positive and brief, but provide a complete and helpful thought.`,
-  messages: '{{{messageHistory}}}'
+  messages: '{{{history}}}'
 });
 
 const mentalHealthAssistantFlow = ai.defineFlow(
