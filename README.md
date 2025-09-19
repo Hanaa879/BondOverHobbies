@@ -1,6 +1,8 @@
 # BondOverHobbies
 
-This is a Next.js application built with Firebase Studio, designed to help people connect over shared hobbies and interests.
+This is a project that was created for the Gen AI hackathon. Its a website that helps people find hobbies and be able to connect to like mined indivuals that will be with you for a life time. It will also have a AI chatbot that will help in improving communication which will help in increasing the mental health of individuals who take part.
+
+
 
 ## Getting Started
 
