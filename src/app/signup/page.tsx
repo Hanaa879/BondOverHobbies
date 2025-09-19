@@ -15,13 +15,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Logo } from "@/components/icons/logo";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -37,6 +41,7 @@ const formSchema = z.object({
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,20 +53,41 @@ export default function SignUpPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // For now, we'll just log the values and show a toast.
-    // In a real app, you would send this to your authentication server.
-    console.log(values);
-    toast({
-      title: "Welcome to the Community!",
-      description: "Your account has been created. Your journey begins now.",
-      action: (
-        <Button asChild variant="link" className="text-white">
-          <Link href="/signin">Sign In</Link>
-        </Button>
-      )
-    });
-    router.push("/dashboard");
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
+
+      await updateProfile(user, {
+        displayName: values.name,
+        photoURL: `https://picsum.photos/seed/${user.uid}/100/100`,
+      });
+
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        displayName: values.name,
+        email: values.email,
+        photoURL: `https://picsum.photos/seed/${user.uid}/100/100`,
+        hobbies: [],
+        communities: [],
+      });
+
+      toast({
+        title: "Welcome to the Community!",
+        description: "Your account has been created. Your journey begins now.",
+      });
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Sign up error:", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error.message || "There was a problem with your request.",
+      });
+    } finally {
+        setIsLoading(false);
+    }
   }
 
   return (
@@ -87,7 +113,7 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Name" {...field} />
+                      <Input placeholder="Your Name" {...field} disabled={isLoading}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -100,7 +126,7 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="you@example.com" {...field} />
+                      <Input placeholder="you@example.com" {...field} disabled={isLoading}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,6 +144,7 @@ export default function SignUpPage() {
                           type={showPassword ? "text" : "password"}
                           placeholder="********"
                           {...field}
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <button
@@ -136,7 +163,8 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Create Account
               </Button>
             </form>

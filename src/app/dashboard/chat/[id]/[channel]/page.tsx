@@ -1,8 +1,7 @@
 
-
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/components/layout/header';
@@ -11,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Sparkles, Calendar, MapPin, Users, Hash, MessageCircle, Paperclip, X, PlusCircle } from 'lucide-react';
+import { Send, Sparkles, Calendar, MapPin, Users, Hash, MessageCircle, Paperclip, X, PlusCircle, Loader2 } from 'lucide-react';
 import { aiChatAssistant } from '@/ai/flows/ai-chat-assistant';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -20,69 +19,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useRouter, useParams } from 'next/navigation';
-
-
-// Mock data
-const communities: Record<string, { name: string; avatar: string; interests: string; channels: string[], backgroundUrl: string; }> = {
-  '1': { name: 'Photography Club', avatar: 'https://picsum.photos/seed/p-club/100/100', interests: 'portrait photography, landscape shots', channels: ['general', 'portraits', 'landscapes'], backgroundUrl: 'https://picsum.photos/seed/photography-bg/1200/800' },
-  '2': { name: 'Weekend Hikers', avatar: 'https://picsum.photos/seed/hikers/100/100', interests: 'long trails, mountain views', channels: ['general', 'trail-talk', 'gear'], backgroundUrl: 'https://picsum.photos/seed/hiking-bg/1200/800' },
-  '3': { name: 'Creative Cooks', avatar: 'https://picsum.photos/seed/cooks/100/100', interests: 'baking, italian cuisine', channels: ['general', 'baking', 'recipes'], backgroundUrl: 'https://picsum.photos/seed/cooking-bg/1200/800' },
-  '4': { name: 'Running Club', avatar: 'https://picsum.photos/seed/running/100/100', interests: 'marathons, trail running', channels: ['general', 'race-day', 'training-plans', 'gear-talk'], backgroundUrl: 'https://picsum.photos/seed/running-bg/1200/800' },
-  '5': { name: 'Bookworms Unite', avatar: 'https://picsum.photos/seed/books/100/100', interests: 'fantasy novels, classic literature', channels: ['general', 'fantasy', 'classics-corner'], backgroundUrl: 'https://picsum.photos/seed/books-bg/1200/800' },
-  'creative-arts-crafts': { name: 'Creative Arts & Crafts', avatar: 'https://picsum.photos/seed/arts/100/100', interests: 'painting, drawing, sculpting', channels: ['general', 'painting', 'sketchbook'], backgroundUrl: 'https://picsum.photos/seed/arts-bg/1200/800' },
-};
-
-const initialMessages: Record<string, Record<string, any[]>> = {
-  '1': {
-    'general': [
-        { sender: 'Alice', message: 'That shot is amazing!', avatar: 'https://picsum.photos/seed/alice/100/100' },
-        { sender: 'You', message: 'Thanks! The lighting was perfect.', avatar: 'https://picsum.photos/seed/user-avatar/100/100' },
-    ]
-  },
-  '2': {
-    'general': [
-      { sender: 'Bob', message: 'Are we still on for Saturday?', avatar: 'https://picsum.photos/seed/bob/100/100' },
-    ]
-  },
-  '3': {
-    'general': [
-        { sender: 'You', message: 'I just tried the new recipe, it was delicious!', avatar: 'https://picsum.photos/seed/user-avatar/100/100' },
-    ]
-  },
-  '4': {
-    'general': [
-        { sender: 'You', message: 'Just joined! Looking forward to my first run with you all.', avatar: 'https://picsum.photos/seed/user-avatar/100/100' },
-        { sender: 'Runner1', message: 'Welcome! Glad to have you.', avatar: 'https://picsum.photos/seed/runner1/100/100' },
-    ],
-    'gear-talk': [
-        { sender: 'Runner2', message: 'Any recommendations for new running shoes?', avatar: 'https://picsum.photos/seed/runner2/100/100' },
-    ]
-  },
-  '5': {
-    'general': []
-  },
-};
-
-const communityEvents: Record<string, any[]> = {
-    '4': [
-        {
-            id: 1,
-            title: 'Weekly 5K Group Run',
-            date: 'Saturday, 9:00 AM',
-            location: 'City Park Entrance',
-            description: 'Join us for our regular weekend run. All paces are welcome!',
-            attendees: 12,
-        },
-        {
-            id: 2,
-            title: 'Marathon Prep Workshop',
-            date: 'Next Wednesday, 7:00 PM',
-            location: 'Community Center',
-            description: 'A workshop on nutrition and pacing for the upcoming city marathon.',
-            attendees: 8,
-        },
-    ]
-}
+import { useAuth } from '@/hooks/use-auth';
+import { db } from '@/lib/firebase';
+import { collection, doc, onSnapshot, orderBy, query, addDoc, serverTimestamp, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 type Attachment = {
   url: string;
@@ -90,82 +29,89 @@ type Attachment = {
   fileName: string;
 };
 
-
 export default function ChatPage() {
   const params = useParams();
-  const communityId = params.id as keyof typeof communities;
+  const communityId = params.id as string;
   const channelId = params.channel as string;
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user, userData } = useAuth();
   const router = useRouter();
 
-  if (!communities[communityId]) {
-      const name = communityId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-      communities[communityId] = { name: name, avatar: `https://picsum.photos/seed/${communityId}/100/100`, interests: 'General interests', channels: ['general'], backgroundUrl: `https://picsum.photos/seed/${communityId}-bg/1200/800` };
-  }
-  
-  const [allMessages, setAllMessages] = useState(() => JSON.parse(JSON.stringify(initialMessages)));
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // This effect runs only on the client, after the initial render.
-    const storedMessages = localStorage.getItem('chatMessages');
-    if (storedMessages) {
-        setAllMessages(JSON.parse(storedMessages));
-    }
-    setIsLoaded(true); // Mark as loaded to start rendering message-dependent UI
-  }, []);
-
-  useEffect(() => {
-    // This effect saves messages to localStorage whenever they change.
-    // It only runs after the initial load to prevent overwriting stored messages
-    // with initial state before they've been loaded.
-    if (isLoaded) {
-      localStorage.setItem('chatMessages', JSON.stringify(allMessages));
-    }
-  }, [allMessages, isLoaded]);
-
-  const [community, setCommunity] = useState(communities[communityId]);
-  
+  const [community, setCommunity] = useState<any>(null);
+  const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [attachment, setAttachment] = useState<Attachment | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
   const { toast } = useToast();
-  const events = communityEvents[communityId] || [];
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const events = community?.events || []; // Assuming events are part of community doc
 
-  const messages = allMessages[communityId]?.[channelId] || [];
+  // Fetch community details
+  useEffect(() => {
+    if (!communityId) return;
+    const communityDocRef = doc(db, 'communities', communityId);
+    const unsubscribe = onSnapshot(communityDocRef, (doc) => {
+      if (doc.exists()) {
+        setCommunity({ id: doc.id, ...doc.data() });
+      } else {
+        // Handle community not found
+        toast({ title: "Community not found", variant: "destructive" });
+        router.push('/dashboard');
+      }
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, [communityId, router, toast]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  // Fetch messages for the channel
+  useEffect(() => {
+    if (!communityId || !channelId) return;
+
+    const messagesColRef = collection(db, 'communities', communityId, 'messages', channelId, 'messages');
+    const q = query(messagesColRef, orderBy('timestamp', 'asc'));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setMessages(msgs);
+    });
+
+    return () => unsubscribe();
+  }, [communityId, channelId]);
+
+
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newMessage.trim() || attachment) {
-      const newMsgObject = { 
-        sender: 'You', 
-        message: newMessage, 
-        avatar: 'https://picsum.photos/seed/user-avatar/100/100',
-        attachment: attachment
-      };
+    if (!user || (!newMessage.trim() && !attachment)) {
+      return;
+    }
+    
+    const messagesColRef = collection(db, 'communities', communityId, 'messages', channelId, 'messages');
 
-      setAllMessages((prevAllMessages: any) => {
-        const newAllMessages = JSON.parse(JSON.stringify(prevAllMessages));
-        if (!newAllMessages[communityId]) {
-          newAllMessages[communityId] = {};
-        }
-        if (!newAllMessages[communityId][channelId]) {
-           newAllMessages[communityId][channelId] = [];
-        }
-        newAllMessages[communityId][channelId].push(newMsgObject);
-        return newAllMessages;
-      });
-      
-      setNewMessage('');
-      setAttachment(null);
+    try {
+        await addDoc(messagesColRef, {
+            text: newMessage,
+            senderId: user.uid,
+            senderName: userData?.displayName || user.email,
+            senderAvatar: userData?.photoURL || `https://picsum.photos/seed/${user.uid}/100/100`,
+            timestamp: serverTimestamp(),
+            // TODO: Handle attachment upload to Firebase Storage
+            attachment: attachment || null,
+        });
+        setNewMessage('');
+        setAttachment(null);
+    } catch (error) {
+        console.error("Error sending message: ", error);
+        toast({ title: "Failed to send message", variant: 'destructive'});
     }
   };
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // For now, using Data URL. In a real app, upload to Firebase Storage and get URL.
       const reader = new FileReader();
       reader.onload = (loadEvent) => {
         const url = loadEvent.target?.result as string;
@@ -177,12 +123,13 @@ export default function ChatPage() {
   };
 
   const handleAssistantClick = async () => {
+    if (!community) return;
     setIsAssistantLoading(true);
     try {
       const result = await aiChatAssistant({
         topic: `${community.name} - #${channelId}`,
-        interests: community.interests,
-        messageHistory: messages.map((m: any) => `${m.sender}: ${m.message}`),
+        interests: community.interests || '',
+        messageHistory: messages.map((m: any) => `${m.senderName}: ${m.text}`),
       });
       setNewMessage(result.prompt);
     } catch (error) {
@@ -197,22 +144,13 @@ export default function ChatPage() {
     }
   };
   
-  const handleCreateChannel = () => {
-    if (newChannelName.trim()) {
+  const handleCreateChannel = async () => {
+    if (newChannelName.trim() && community) {
         const slug = newChannelName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         if (!community.channels.includes(slug)) {
-            const updatedCommunity = {
-                ...community,
-                channels: [...community.channels, slug]
-            };
-            setCommunity(updatedCommunity);
-            communities[communityId] = updatedCommunity;
-            
-            setAllMessages((prevAllMessages: any) => {
-                const newAllMessages = {...prevAllMessages};
-                if (!newAllMessages[communityId]) newAllMessages[communityId] = {};
-                newAllMessages[communityId][slug] = [];
-                return newAllMessages;
+            const communityDocRef = doc(db, 'communities', communityId);
+            await updateDoc(communityDocRef, {
+                channels: arrayUnion(slug)
             });
 
             toast({
@@ -230,6 +168,15 @@ export default function ChatPage() {
             });
         }
     }
+  };
+
+  if (isLoading || !community) {
+    return (
+        <div className="flex flex-col min-h-screen items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin" />
+            <p className="mt-4">Loading community chat...</p>
+        </div>
+    );
   }
 
   return (
@@ -281,7 +228,7 @@ export default function ChatPage() {
                         </DialogContent>
                     </Dialog>
                 </div>
-                {community.channels.map(channel => (
+                {community.channels.map((channel: string) => (
                     <Link
                         key={channel}
                         href={`/dashboard/chat/${communityId}/${channel}`}
@@ -318,33 +265,33 @@ export default function ChatPage() {
                         </div>
                         <ScrollArea className="flex-grow mb-4 pr-4">
                             <div className="space-y-6 p-6">
-                            {isLoaded && messages.map((msg: any, index: number) => (
-                                <div key={index} className={`flex items-start gap-4 ${msg.sender === 'You' ? 'justify-end' : ''}`}>
-                                {msg.sender !== 'You' && (
+                            {messages.map((msg, index) => (
+                                <div key={index} className={`flex items-start gap-4 ${msg.senderId === user?.uid ? 'justify-end' : ''}`}>
+                                {msg.senderId !== user?.uid && (
                                     <Avatar className="h-10 w-10">
-                                    <AvatarImage src={msg.avatar} alt={msg.sender} />
-                                    <AvatarFallback>{msg.sender.charAt(0)}</AvatarFallback>
+                                    <AvatarImage src={msg.senderAvatar} alt={msg.senderName} />
+                                    <AvatarFallback>{msg.senderName.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 )}
-                                <div className={`rounded-lg p-3 max-w-md ${msg.sender === 'You' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-                                    <p className="font-semibold text-sm mb-1">{msg.sender}</p>
+                                <div className={`rounded-lg p-3 max-w-md ${msg.senderId === user?.uid ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                                    <p className="font-semibold text-sm mb-1">{msg.senderName}</p>
                                     {msg.attachment?.type === 'image' && (
                                       <Image src={msg.attachment.url} alt="User attachment" width={300} height={200} className="rounded-md my-2" />
                                     )}
                                     {msg.attachment?.type === 'video' && (
                                         <video src={msg.attachment.url} controls className="rounded-md my-2 max-w-full" />
                                     )}
-                                    {msg.message && <p>{msg.message}</p>}
+                                    {msg.text && <p>{msg.text}</p>}
                                 </div>
-                                {msg.sender === 'You' && (
+                                {msg.senderId === user?.uid && (
                                     <Avatar className="h-10 w-10">
-                                    <AvatarImage src={msg.avatar} alt={msg.sender} />
-                                    <AvatarFallback>{msg.sender.charAt(0)}</AvatarFallback>
+                                    <AvatarImage src={msg.senderAvatar} alt={msg.senderName} />
+                                    <AvatarFallback>{msg.senderName.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                 )}
                                 </div>
                             ))}
-                            {isLoaded && messages.length === 0 && (
+                            {messages.length === 0 && (
                                 <div className="text-center text-gray-500 dark:text-gray-400 py-10">
                                 <p>No messages yet. Be the first to say something!</p>
                                 </div>
@@ -390,12 +337,13 @@ export default function ChatPage() {
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     placeholder={`Message #${channelId}`}
                                     className="flex-grow"
+                                    disabled={!user}
                                 />
-                                <Button type="button" variant="outline" size="icon" onClick={handleAssistantClick} disabled={isAssistantLoading}>
+                                <Button type="button" variant="outline" size="icon" onClick={handleAssistantClick} disabled={isAssistantLoading || !user}>
                                     <Sparkles className={`h-5 w-5 ${isAssistantLoading ? 'animate-spin' : ''}`} />
                                     <span className="sr-only">AI Assistant</span>
                                 </Button>
-                                <Button type="submit">
+                                <Button type="submit" disabled={!user}>
                                     <Send className="h-5 w-5" />
                                     <span className="sr-only">Send</span>
                                 </Button>
@@ -405,7 +353,7 @@ export default function ChatPage() {
                     <TabsContent value="events" className="flex-grow">
                         <div className="space-y-4 p-6">
                             {events.length > 0 ? (
-                                events.map(event => (
+                                events.map((event: any) => (
                                     <Card key={event.id}>
                                         <CardHeader>
                                             <CardTitle>{event.title}</CardTitle>
@@ -443,7 +391,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-    
-
-    

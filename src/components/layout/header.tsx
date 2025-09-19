@@ -20,10 +20,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Logo } from "../icons/logo";
+import { useAuth } from "@/hooks/use-auth";
 
 export function Header() {
   const pathname = usePathname();
-  const isSignedIn = ["/dashboard", "/hobbies", "/events", "/showcase", "/discover"].some(path => pathname.startsWith(path));
+  const { user } = useAuth();
+  
+  // Consider user signed in if user object exists, not just based on path
+  const isSignedIn = !!user;
 
   const hobbyCategories = [
       "Creative Arts & Crafts",

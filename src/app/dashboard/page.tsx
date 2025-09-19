@@ -8,110 +8,96 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Search, MessageSquare, PlusCircle, Plus } from 'lucide-react';
+import { Search, MessageSquare, PlusCircle, Plus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/use-auth';
+import { db } from '@/lib/firebase';
+import { arrayUnion, collection, doc, getDoc, getDocs, query, updateDoc, where, writeBatch } from 'firebase/firestore';
 
-// Mock data - in a real app, this would come from your backend
-const initialUserHobbies = ['Photography', 'Hiking', 'Cooking'];
-const initialRecentConversations = [
-  {
-    id: 1,
-    name: 'Photography Club',
-    lastMessage: 'Alice: That shot is amazing!',
-    avatar: 'https://picsum.photos/seed/p-club/100/100',
-    communityId: '1'
-  },
-  {
-    id: 2,
-    name: 'Weekend Hikers',
-    lastMessage: 'Bob: Are we still on for Saturday?',
-    avatar: 'https://picsum.photos/seed/hikers/100/100',
-    communityId: '2'
-  },
-  {
-    id: 3,
-    name: 'Creative Cooks',
-    lastMessage: 'You: I just tried the new recipe, it was delicious!',
-    avatar: 'https://picsum.photos/seed/cooks/100/100',
-    communityId: '3'
-  },
-];
-const initialDiscoverableCommunities = [
-    {
-      id: 4,
-      name: 'Running Club',
-      description: 'For all levels of runners.',
-      avatar: 'https://picsum.photos/seed/running/100/100',
-      communityId: '4'
-    },
-     {
-      id: 5,
-      name: 'Bookworms Unite',
-      description: 'Discussing everything from classics to modern hits.',
-      avatar: 'https://picsum.photos/seed/books/100/100',
-      communityId: '5'
-    },
-    {
-      id: 6,
-      name: 'Creative Arts & Crafts',
-      description: 'A place for artists to share and collaborate.',
-      avatar: 'https://picsum.photos/seed/arts/100/100',
-      communityId: 'creative-arts-crafts'
-    }
-];
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
+  const { user, userData, loading } = useAuth();
 
   const [userHobbies, setUserHobbies] = useState<string[]>([]);
-  const [recentConversations, setRecentConversations] = useState(initialRecentConversations);
-  const [discoverableCommunities, setDiscoverableCommunities] = useState(initialDiscoverableCommunities);
+  const [recentConversations, setRecentConversations] = useState<any[]>([]);
+  const [discoverableCommunities, setDiscoverableCommunities] = useState<any[]>([]);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
-    const storedHobbies = localStorage.getItem('userHobbies');
-    if (storedHobbies) {
-        setUserHobbies(JSON.parse(storedHobbies));
-    } else {
-        setUserHobbies(initialUserHobbies);
-    }
+    if (loading || !user || !userData) return;
 
-    const storedConversations = localStorage.getItem('recentConversations');
-    if (storedConversations) {
-        setRecentConversations(JSON.parse(storedConversations));
-    }
-  }, []);
+    const fetchData = async () => {
+        setIsDataLoading(true);
+        // Set user hobbies
+        setUserHobbies(userData.hobbies || []);
 
-  const handleJoinCommunity = (community: { id: number; name: string; description: string; avatar: string; communityId: string }) => {
-    const newConversation = {
-      id: community.id,
-      name: community.name,
-      lastMessage: `You just joined the ${community.name} community!`,
-      avatar: community.avatar,
-      communityId: community.communityId
+        // Fetch user's communities (recent conversations)
+        if (userData.communities && userData.communities.length > 0) {
+            const communitiesQuery = query(collection(db, 'communities'), where('__name__', 'in', userData.communities));
+            const querySnapshot = await getDocs(communitiesQuery);
+            const userCommunities = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            // TODO: Fetch last message for each community
+            const convos = userCommunities.map(c => ({...c, communityId: c.id, lastMessage: 'Click to open chat'}));
+            setRecentConversations(convos);
+        } else {
+            setRecentConversations([]);
+        }
+
+        // Fetch discoverable communities (communities user is not a part of)
+        const allCommunitiesSnapshot = await getDocs(collection(db, 'communities'));
+        const allCommunities = allCommunitiesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const discoverable = allCommunities.filter(c => !userData.communities.includes(c.id));
+        setDiscoverableCommunities(discoverable.map(c => ({...c, communityId: c.id})));
+
+        setIsDataLoading(false);
     };
-    
-    const updatedConversations = [...recentConversations, newConversation];
-    setRecentConversations(updatedConversations);
-    localStorage.setItem('recentConversations', JSON.stringify(updatedConversations));
 
-    const newDiscoverable = discoverableCommunities.filter(c => c.id !== community.id);
-    setDiscoverableCommunities(newDiscoverable);
-    
-    if (!userHobbies.includes(community.name)) {
-        const newHobbies = [...userHobbies, community.name];
-        setUserHobbies(newHobbies);
-        localStorage.setItem('userHobbies', JSON.stringify(newHobbies));
-    }
-    
+    fetchData();
+
+  }, [user, userData, loading]);
+
+  const handleJoinCommunity = async (community: { id: string; name: string; description: string; avatar: string; communityId: string }) => {
+    if (!user) return;
+
+    // Update user document
+    const userDocRef = doc(db, 'users', user.uid);
+    await updateDoc(userDocRef, {
+        communities: arrayUnion(community.id),
+        hobbies: arrayUnion(community.name), // Add community name as a hobby
+    });
+
+    // Update community document
+    const communityDocRef = doc(db, 'communities', community.id);
+    await updateDoc(communityDocRef, {
+        members: arrayUnion(user.uid)
+    });
+
+    // Optimistic UI update
+    const newConversation = {
+      ...community,
+      lastMessage: `You just joined the ${community.name} community!`,
+    };
+    setRecentConversations(prev => [...prev, newConversation]);
+    setDiscoverableCommunities(prev => prev.filter(c => c.id !== community.id));
+    setUserHobbies(prev => Array.from(new Set([...prev, community.name])));
+
     router.push(`/dashboard/chat/${community.communityId}/general`);
   };
 
+  if (loading || isDataLoading) {
+    return (
+        <div className="flex min-h-screen items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin" />
+        </div>
+    );
+  }
+
   const filteredConversations = recentConversations.filter(
     (convo) =>
-      convo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      convo.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+      convo.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const filteredHobbies = userHobbies.filter((hobby) =>
@@ -204,7 +190,7 @@ export default function DashboardPage() {
                         </Link>
                       ))
                     ) : (
-                      <p className="text-center text-muted-foreground py-4">No conversations found. Time to start one!</p>
+                      <p className="text-center text-muted-foreground py-4">No communities joined yet. Start by discovering one!</p>
                     )}
                   </div>
                 </CardContent>
